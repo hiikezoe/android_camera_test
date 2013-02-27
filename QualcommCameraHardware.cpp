@@ -1431,7 +1431,7 @@ QualcommCameraHardware::QualcommCameraHardware()
     for(int i=0; i< MAX_SNAPSHOT_BUFFERS; i++) {
        mRawMapped[i] = NULL;
        mJpegMapped[i] = NULL;
-       mThumbnailMapped[i] = NULL;
+       mThumbnailMapped[i] = 0;
     }
     mRawSnapshotMapped = NULL;
     mJpegCopyMapped = NULL;
@@ -3385,7 +3385,7 @@ void QualcommCameraHardware::runHFRThread(void *data)
                       ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %p", index);
                     }
                     mThumbnailBuffer[cnt] = NULL;
-                    mThumbnailMapped[cnt] = NULL;
+                    mThumbnailMapped[cnt] = 0;
                 }
                 ALOGV("runHfrThread : display unlock");
                 mDisplayLock.unlock();
@@ -4719,7 +4719,7 @@ void QualcommCameraHardware::deinitRaw()
                        ALOGE("deinitraw : Error un-mmapping the thumbnail buffer %d", index);
                      }
                      mThumbnailBuffer[cnt] = NULL;
-                     mThumbnailMapped[cnt] = NULL;
+                     mThumbnailMapped[cnt] = 0;
                 }
                 ALOGI("deinitraw : display unlock");
                 mDisplayLock.unlock();
@@ -5552,7 +5552,7 @@ void QualcommCameraHardware::stopPreview()
                     if (munmap((void *)(mThumbnailMapped[cnt]),handle->size ) == -1) {
                       ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %p", index);
                     }
-                    mThumbnailMapped[cnt] = NULL;
+                    mThumbnailMapped[cnt] = 0;
                  }
                 mThumbnailBuffer[cnt] = NULL;
                 ALOGI("stoppreview : display unlock");

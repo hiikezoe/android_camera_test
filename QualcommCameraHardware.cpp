@@ -671,7 +671,6 @@ static camera_antibanding_type camera_get_location(void) {
 
 static const str_map scenemode[] = {
     { QCameraParameters::SCENE_MODE_AUTO,           CAMERA_BESTSHOT_OFF },
-    { QCameraParameters::SCENE_MODE_ASD,           CAMERA_BESTSHOT_AUTO },
     { QCameraParameters::SCENE_MODE_ACTION,         CAMERA_BESTSHOT_ACTION },
     { QCameraParameters::SCENE_MODE_PORTRAIT,       CAMERA_BESTSHOT_PORTRAIT },
     { QCameraParameters::SCENE_MODE_LANDSCAPE,      CAMERA_BESTSHOT_LANDSCAPE },
@@ -8746,12 +8745,7 @@ status_t QualcommCameraHardware::setSceneMode(const QCameraParameters& params)
 
             if (ret == NO_ERROR) {
               int retParm1,  retParm2;
-              /*if value is auto, set ASD on, else set ASD off*/
-              if (value == CAMERA_BESTSHOT_AUTO ) {
-                asd_val = true;
-              } else {
-                asd_val = false;
-              }
+              asd_val = false;
 
               /*note: we need to simplify this logic by using a single ctrl as in 8960*/
               retParm1 = native_set_parms(CAMERA_PARM_BL_DETECTION, sizeof(value),

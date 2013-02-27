@@ -1,6 +1,8 @@
 #ifndef __UNKONWN_H__
 #define __UNKONWN_H__
 
+#include "QCamera_Intf.h"
+
 typedef enum {
   CAMSTATS_TYPE,
 } camstats_type;
@@ -167,5 +169,29 @@ typedef enum {
   LIVESHOT_ENCODE_ERROR,
   LIVESHOT_UNKNOWN_ERROR,
 } liveshot_status;
+
+typedef enum {
+  SNAPSHOT_DONE,
+  SNAPSHOT_FAILED,
+  JPEG_ENC_DONE,
+  JPEG_ENC_FAILED
+} mm_camera_event_type;
+
+typedef struct {
+  mm_camera_event_type event_type;
+  union {
+    msm_frame *yuv_frames;
+    mm_camera_buffer_t *encoded_frame;
+  } event_data;
+} mm_camera_event;
+
+typedef struct {
+  void (*preview_frame_cb)  (struct msm_frame *frame);
+  void (*on_liveshot_event) (liveshot_status status, uint32_t jpeg_size);
+  void (*camstats_cb)       (camstats_type stype, camera_preview_histogram_info *histinfo);
+  void (*video_frame_cb)    (struct msm_frame *frame);
+  int8_t (*on_event)        (mm_camera_event *event);
+  void (*on_error_event)    (camera_error_type err);
+} mm_camera_notify;
 
 #endif /* __UNKONWN_H__ */

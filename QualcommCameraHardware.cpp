@@ -72,12 +72,6 @@ extern "C" {
 #include <stdlib.h>
 
 
-#include <camera.h>
-#include <cam_fifo.h>
-#include <liveshot.h>
-#include <jpege.h>
-#include <jpeg_encoder.h>
-
 #define DUMP_LIVESHOT_JPEG_FILE 0
 
 #define DEFAULT_PICTURE_WIDTH  640

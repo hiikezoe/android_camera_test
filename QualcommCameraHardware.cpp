@@ -731,7 +731,6 @@ static const str_map focus_modes[] = {
     { QCameraParameters::FOCUS_MODE_INFINITY, DONT_CARE },
     { QCameraParameters::FOCUS_MODE_NORMAL,   AF_MODE_NORMAL },
     { QCameraParameters::FOCUS_MODE_MACRO,    AF_MODE_MACRO },
-    { QCameraParameters::FOCUS_MODE_CONTINUOUS_PICTURE, AF_MODE_CAF },
     { QCameraParameters::FOCUS_MODE_CONTINUOUS_VIDEO, DONT_CARE }
 };
 

@@ -8702,10 +8702,10 @@ status_t  QualcommCameraHardware::setISOValue(const QCameraParameters& params) {
 
 status_t QualcommCameraHardware::setSceneDetect(const QCameraParameters& params)
 {
-    bool retParm1, retParm2;
+    bool retParm;
     if (supportsSceneDetection()) {
-        if(!mCfgControl.mm_camera_is_supported(CAMERA_PARM_BL_DETECTION) && !mCfgControl.mm_camera_is_supported(CAMERA_PARM_SNOW_DETECTION)) {
-            ALOGI("Parameter Auto Scene Detection is not supported for this sensor");
+        if(!mCfgControl.mm_camera_is_supported(CAMERA_PARM_SCENE_DETECTION)) {
+            ALOGE("Parameter Auto Scene Detection is not supported for this sensor");
             return NO_ERROR;
         }
         const char *str = params.get(QCameraParameters::KEY_SCENE_DETECT);
@@ -8714,22 +8714,16 @@ status_t QualcommCameraHardware::setSceneDetect(const QCameraParameters& params)
             if (value != NOT_FOUND) {
                 mParameters.set(QCameraParameters::KEY_SCENE_DETECT, str);
 
-                retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
-                                           (void *)&value);
-
-                retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
-                                           (void *)&value);
+                retParm = NATIVE_SET_PARMS(CAMERA_PARM_SCENE_DETECTION, sizeof(value),
+                                          (void *)&value);
 
                 //All Auto Scene detection modes should be all ON or all OFF.
-                if(retParm1 == false || retParm2 == false) {
+                if(retParm == false) {
                     value = !value;
-                    retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
-                                               (void *)&value);
-
-                    retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
+                    retParm = NATIVE_SET_PARMS(CAMERA_PARM_SCENE_DETECTION, sizeof(value),
                                                (void *)&value);
                 }
-                return (retParm1 && retParm2) ? NO_ERROR : UNKNOWN_ERROR;
+                return (retParm) ? NO_ERROR : UNKNOWN_ERROR;
             }
         }
     ALOGE("Invalid auto scene detection value: %s", (str == NULL) ? "NULL" : str);
@@ -8756,13 +8750,11 @@ status_t QualcommCameraHardware::setSceneMode(const QCameraParameters& params)
                                        (void *)&value);
 
             if (ret == NO_ERROR) {
-              int retParm1,  retParm2;
+              int retParm;
               asd_val = false;
 
               /*note: we need to simplify this logic by using a single ctrl as in 8960*/
-              retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
-                                         (void *)&asd_val);
-              retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
+              retParm = NATIVE_SET_PARMS(CAMERA_PARM_SCENE_DETECTION, sizeof(value),
                                          (void *)&asd_val);
             }
             return ret ? NO_ERROR : UNKNOWN_ERROR;

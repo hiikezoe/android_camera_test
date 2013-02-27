@@ -228,4 +228,12 @@ typedef enum {
   CAMERA_OPS_MAX
 } mm_camera_legacy_ops_type_t;
 
+typedef struct {
+  int (*mm_camera_is_supported)         (mm_camera_legacy_ops_type_t type);
+  mm_camera_status_t (*mm_camera_start) (mm_camera_legacy_ops_type_t type,
+                                         void *arg1, void *arg2);
+  mm_camera_status_t (*mm_camera_stop)  (mm_camera_legacy_ops_type_t type,
+                                         void *arg1, void *arg2);
+} mm_camera_ops;
+
 #endif /* __UNKONWN_H__ */

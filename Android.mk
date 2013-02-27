@@ -53,7 +53,9 @@ LOCAL_SHARED_LIBRARIES:=  \
   libdl                   \
   libcamera_client        \
   liblog                  \
-  libcutils
+  libcutils               \
+  libutils                \
+  libgenlock
 
 LOCAL_MODULE:= camera.$(TARGET_BOARD_PLATFORM)
 

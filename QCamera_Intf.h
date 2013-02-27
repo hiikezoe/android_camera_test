@@ -1191,15 +1191,6 @@ typedef enum {
   MOTION_ISO_ON
 } motion_iso_t;
 
-struct msm_ctrl_cmd {
-  uint16_t type;
-  uint16_t length;
-  void *value;
-  uint16_t status;
-  uint32_t timeout_ms;
-  int resp_fd; /* FIXME: to be used by the kernel, pass-through for now */
-};
-
 typedef struct {
   struct msm_ctrl_cmd ctrlCmd;
   int fd;

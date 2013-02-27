@@ -29,7 +29,7 @@ DLOPEN_LIBMMCAMERA:=1
 
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS:=                                \
+LOCAL_CFLAGS :=                               \
   -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)  \
   -DMSM_MAX_CAMERA_SENSORS=1                  \
   -DNUM_PREVIEW_BUFFERS=4

@@ -101,9 +101,6 @@ extern "C" {
 #include <dlfcn.h>
 
 
-// Conversion routines from YV420sp to YV12 format
-int (*LINK_yuv_convert_ycrcb420sp_to_yv12_inplace) (yuv_image_type* yuvStructPtr);
-int (*LINK_yuv_convert_ycrcb420sp_to_yv12) (yuv_image_type* yuvStructPtrin, yuv_image_type* yuvStructPtrout);
 #define NUM_YV12_FRAMES 1
 #define FOCUS_AREA_INIT "(-1000,-1000,1000,1000,1000)"
 
@@ -2214,12 +2211,6 @@ bool QualcommCameraHardware::startCamera()
     *(void **)&LINK_mm_camera_destroy =
         ::dlsym(libmmcamera, "mm_camera_destroy");
 
-    *(void **)&LINK_yuv_convert_ycrcb420sp_to_yv12_inplace =
-        ::dlsym(libmmcamera, "yuv_convert_ycrcb420sp_to_yv12");
-
-    *(void **)&LINK_yuv_convert_ycrcb420sp_to_yv12 =
-        ::dlsym(libmmcamera, "yuv_convert_ycrcb420sp_to_yv12_ver2");
-
     /* Disabling until support is available.*/
     *(void **)&LINK_zoom_crop_upscale =
         ::dlsym(libmmcamera, "zoom_crop_upscale");
@@ -3059,19 +3050,11 @@ void QualcommCameraHardware::runPreviewThread(void *data)
             // if the width is not multiple of 32,
             //we cannot do inplace conversion as sizes of 420sp and YV12 frames differ
             if(previewWidth%32){
-#if 0 //TODO :
-               ALOGE("YV12::Doing not inplace conversion from 420sp to yv12");
-               in_buf.imgPtr = (unsigned char*)mPreviewMapped[bufferIndex]->data;
-               in_buf.dx = out_buf.dx = previewWidth;
-               in_buf.dy = in_buf.dy = previewHeight;
-               conversion_result = LINK_yuv_convert_ycrcb420sp_to_yv12(&in_buf, &out_buf);
-#endif
             } else {
                ALOGI("Doing inplace conversion from 420sp to yv12");
                in_buf.imgPtr = (unsigned char *)mPreviewMapped[bufferIndex]->data;
                in_buf.dx  = previewWidth;
                in_buf.dy  = previewHeight;
-               conversion_result = LINK_yuv_convert_ycrcb420sp_to_yv12_inplace(&in_buf);
             }
          }
 

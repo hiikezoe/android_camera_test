@@ -201,4 +201,31 @@ typedef struct {
   int16_t  altitude;   /* meters                          */
 } camera_position_type;
 
+/* Temp: We are declaring it here so that we can still use the
+   legacy GET_CAPABILITIES call to config thread. A new design
+   to query capabilities based on V4L2 interface is being
+   discussed. */
+typedef enum {
+  CAMERA_OPS_LOCAL = -1,  /*no need to query mm-camera*/
+  CAMERA_OPS_STREAMING_PREVIEW = 0,
+  CAMERA_OPS_STREAMING_ZSL,
+  CAMERA_OPS_STREAMING_VIDEO,
+  CAMERA_OPS_CAPTURE, /*not supported*/
+  CAMERA_OPS_FOCUS,
+  CAMERA_OPS_GET_PICTURE, /*5*/
+  CAMERA_OPS_PREPARE_SNAPSHOT,
+  CAMERA_OPS_SNAPSHOT,
+  CAMERA_OPS_LIVESHOT,
+  CAMERA_OPS_RAW_SNAPSHOT,
+  CAMERA_OPS_VIDEO_RECORDING, /*10*/
+  CAMERA_OPS_REGISTER_BUFFER,
+  CAMERA_OPS_UNREGISTER_BUFFER,
+  CAMERA_OPS_CAPTURE_AND_ENCODE,
+  CAMERA_OPS_RAW_CAPTURE,
+  CAMERA_OPS_ENCODE, /*15*/
+  CAMERA_OPS_ZSL_STREAMING_CB,
+  /* add new above*/
+  CAMERA_OPS_MAX
+} mm_camera_legacy_ops_type_t;
+
 #endif /* __UNKONWN_H__ */

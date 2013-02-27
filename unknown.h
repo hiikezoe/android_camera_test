@@ -236,4 +236,8 @@ typedef struct {
                                          void *arg1, void *arg2);
 } mm_camera_ops;
 
+typedef struct {
+  camera_mode_t cammode;
+} cam_frame_start_parms;
+
 #endif /* __UNKONWN_H__ */

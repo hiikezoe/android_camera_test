@@ -2624,7 +2624,7 @@ bool QualcommCameraHardware::initImageEncodeParameters(int size)
     addExifTag(EXIFTAGID_ISO_SPEED_RATING,EXIF_SHORT,1,1,(void *)&isoMode);
 
     if (mUseJpegDownScaling) {
-      ALOGI("initImageEncodeParameters: update main image", __func__);
+      ALOGI("initImageEncodeParameters: update main image");
       mImageEncodeParms.output_picture_width = mActualPictWidth;
       mImageEncodeParms.output_picture_height = mActualPictHeight;
     }
@@ -4716,7 +4716,7 @@ void QualcommCameraHardware::deinitRaw()
                         MSM_PMEM_THUMBNAIL,
                         false, false);
                      if (munmap((void *)(mThumbnailMapped[cnt]),handle->size ) == -1) {
-                       ALOGE("deinitraw : Error un-mmapping the thumbnail buffer %d", index);
+                       ALOGE("deinitraw : Error un-mmapping the thumbnail buffer %p", index);
                      }
                      mThumbnailBuffer[cnt] = NULL;
                      mThumbnailMapped[cnt] = 0;

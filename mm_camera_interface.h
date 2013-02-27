@@ -149,13 +149,6 @@ typedef struct {
 } mm_camera_bundle_attr_t;
 
 typedef struct {
-    uint8_t camera_id;                   /* camera id */
-    camera_info_t camera_info;           /* postion, mount_angle, etc. */
-    enum sensor_type_t main_sensor_type; /* BAYER, YUV, JPEG_SOC, etc. */
-    char *video_dev_name;                /* device node name, e.g. /dev/video1 */
-} mm_camera_info_t;
-
-typedef struct {
   uint8_t cid;
   uint8_t dt;
 }stream_cid_t;
@@ -311,16 +304,6 @@ typedef struct {
                                 mm_camera_stream_parm_t parm_type,
                                 void* p_value);
 } mm_camera_ops_t;
-
-typedef struct {
-    uint32_t camera_handle;        /* camera object handle */
-    mm_camera_info_t *camera_info; /* reference pointer of camear info */
-    mm_camera_ops_t *ops;          /* API call table */
-} mm_camera_vtbl_t;
-
-mm_camera_info_t * camera_query(uint8_t *num_cameras);
-mm_camera_vtbl_t * camera_open(uint8_t camera_idx,
-                               mm_camear_mem_vtbl_t *mem_vtbl);
 
 typedef enum {
     MM_CAMERA_PREVIEW,

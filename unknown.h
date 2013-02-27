@@ -150,4 +150,16 @@ typedef enum {
   MM_CAMERA_ERR_CAPTURE_TIMEOUT,
 } mm_camera_status_t;
 
+typedef struct {
+  mm_camera_status_t (*mm_camera_query_parms) (camera_parm_type_t parm_type,
+                                               void **values, uint32_t *count);
+  mm_camera_status_t (*mm_camera_set_parm)    (camera_parm_type_t parm_type,
+                                               void *value);
+  mm_camera_status_t(*mm_camera_get_parm)     (camera_parm_type_t parm_type,
+                                               void *value);
+  int8_t (*mm_camera_is_supported)            (camera_parm_type_t parm_type);
+  int8_t (*mm_camera_is_parm_supported)       (camera_parm_type_t parm_type,
+                                               void *sub_parm);
+} mm_camera_config;
+
 #endif /* __UNKONWN_H__ */

@@ -9043,7 +9043,6 @@ status_t QualcommCameraHardware::setFocusMode(const QCameraParameters& params)
                     cafSupport = true;
                 }
                 ALOGV("Continuous Auto Focus %d", cafSupport);
-                NATIVE_SET_PARMS(CAMERA_PARM_CONTINUOUS_AF, sizeof(int8_t), (void *)&cafSupport);
             }
             // Focus step is reset to infinity when preview is started. We do
             // not need to do anything now.

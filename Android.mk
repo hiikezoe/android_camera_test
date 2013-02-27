@@ -21,6 +21,39 @@ LOCAL_MODULE_TAGS := optional
 
 LOCAL_SHARED_LIBRARIES := libdl libutils
 
- LOCAL_C_INCLUDES := frameworks/av/services/camera/libcameraservice
+LOCAL_C_INCLUDES := frameworks/av/services/camera/libcameraservice
+
+include $(BUILD_EXECUTABLE)
+
+DLOPEN_LIBMMCAMERA:=1
+
+include $(CLEAR_VARS)
+
+LOCAL_CFLAGS:= -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)
+
+LOCAL_HAL_FILES :=            \
+  QualcommCamera.cpp          \
+  QualcommCameraHardware.cpp
+
+LOCAL_SRC_FILES := $(LOCAL_HAL_FILES)
+
+LOCAL_CFLAGS += -DNUM_PREVIEW_BUFFERS=4
+
+LOCAL_C_INCLUDES +=                      \
+  hardware/qcom/display/libgralloc       \
+  hardware/qcom/display/libgenlock       \
+  hardware/qcom/media/libstagefrighthw
+
+
+LOCAL_SHARED_LIBRARIES:=  \
+  libbinder               \
+  libdl                   \
+  libcamera_client        \
+  liblog                  \
+  libcutils
+
+LOCAL_MODULE:= camera.$(TARGET_BOARD_PLATFORM)
+
+LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_EXECUTABLE)

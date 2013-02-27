@@ -2745,6 +2745,7 @@ static bool register_buf(int size,
     pmemBuf.offset   = offset;
     pmemBuf.len      = size;
     pmemBuf.vaddr    = buf;
+#ifdef HAVE_YV12_PREVIEW
     pmemBuf.planar0_off = yoffset;
      if(!use_all_chnls) {
        ALOGI("use_all_chnls = %d\n", use_all_chnls);
@@ -2757,6 +2758,7 @@ static bool register_buf(int size,
        ALOGI("register_buf: CbOff = 0x%x CrOff = 0x%x",
        pmemBuf.planar1_off, pmemBuf.planar2_off);
 
+#endif
     pmemBuf.active   = vfe_can_write;
 
     ALOGI("register_buf:  reg = %d buffer = %p",
@@ -4927,15 +4929,19 @@ status_t QualcommCameraHardware::getBuffersAndStartPreview() {
                     myv12_params.CbOffset = PAD_TO_WORD(previewWidth * previewHeight);
                     myv12_params.CrOffset = myv12_params.CbOffset + PAD_TO_WORD((previewWidth * previewHeight)/4);
                     ALOGI("CbOffset = 0x%x CrOffset = 0x%x \n",myv12_params.CbOffset, myv12_params.CrOffset);
+#ifdef HAVE_YV12_PREVIEW
                     frames[cnt].planar0_off = 0;
                     frames[cnt].planar1_off = myv12_params.CbOffset;
                     frames[cnt].planar2_off = myv12_params.CrOffset;
+#endif
                     frames[cnt].path = OUTPUT_TYPE_P; // MSM_FRAME_ENC;
                     all_chnls = true;
                   }else{
+#ifdef HAVE_YV12_PREVIEW
                     frames[cnt].planar0_off = 0;
                     frames[cnt].planar1_off= CbCrOffset;
                     frames[cnt].planar2_off = 0;
+#endif
                     frames[cnt].path = OUTPUT_TYPE_P; // MSM_FRAME_ENC;
                   }
                   frame_buffer[cnt].frame = &frames[cnt];
@@ -6953,14 +6959,18 @@ bool QualcommCameraHardware::initRecord()
         recordframes[cnt].buffer = (unsigned int)mRecordMapped[cnt]->data;
         recordframes[cnt].fd = mRecordfd[cnt];
 #endif
+#ifdef HAVE_YV12_PREVIEW
         recordframes[cnt].planar0_off = 0;
         recordframes[cnt].planar1_off = CbCrOffset;
         recordframes[cnt].planar2_off = 0;
+#endif
         recordframes[cnt].path = OUTPUT_TYPE_V;
         record_buffers_tracking_flag[cnt] = false;
+#ifdef HAVE_YV12_PREVIEW
         ALOGV ("initRecord :  record heap , video buffers  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
           (unsigned long)recordframes[cnt].buffer, recordframes[cnt].fd, recordframes[cnt].planar0_off,
           recordframes[cnt].planar1_off);
+#endif
         active=(cnt<ACTIVE_VIDEO_BUFFERS);
         type = MSM_PMEM_VIDEO;
         if((mVpeEnabled) && (cnt == kRecordBufferCount-1)) {

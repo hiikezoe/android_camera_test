@@ -293,4 +293,9 @@ typedef struct {
   bool useExternalBuffers;
 } zsl_params_t;
 
+typedef struct {
+  uint32_t CbOffset;
+  uint32_t CrOffset;
+} yv12_format_parms_t;
+
 #endif /* __UNKONWN_H__ */

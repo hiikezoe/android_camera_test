@@ -341,7 +341,7 @@ static void enqueue(struct fifo_queue* q, struct fifo_node*p) {
   }
   else {
       q->front = p;
-      q->back = p;   
+      q->back = p;
   }
   q->num_of_frames +=1;
   return;

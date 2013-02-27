@@ -269,4 +269,16 @@ typedef struct {
   int thumbnail_height;
 } capture_params_t;
 
+typedef struct {
+  int num_captures;
+  int raw_picture_width;
+  int raw_picture_height;
+} raw_capture_params_t;
+
+typedef struct {
+  int num_captures;
+  int thumbnail_width;
+  int thumbnail_height;
+} zsl_capture_params_t;
+
 #endif /* __UNKONWN_H__ */

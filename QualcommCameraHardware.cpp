@@ -116,7 +116,9 @@ void* (*LINK_cam_frame)(void *data);
 #ifdef HAVE_WAIT_CAM_FRMAME_THREAD_READY
 void* (*LINK_wait_cam_frame_thread_ready)(void);
 #endif
+#ifdef HAVE_CAM_FRAME_SET_EXIT_FALG
 void* (*LINK_cam_frame_set_exit_flag)(int flag);
+#endif
 bool  (*LINK_jpeg_encoder_init)();
 void  (*LINK_jpeg_encoder_join)();
 bool  (*LINK_jpeg_encoder_encode)(const cam_ctrl_dimension_t *dimen,
@@ -2167,8 +2169,10 @@ bool QualcommCameraHardware::startCamera()
     *(void **)&LINK_wait_cam_frame_thread_ready =
         ::dlsym(libmmcamera, "wait_cam_frame_thread_ready");
 #endif
+#ifdef HAVE_CAM_FRAME_SET_EXIT_FALG
     *(void **)&LINK_cam_frame_set_exit_flag =
         ::dlsym(libmmcamera, "cam_frame_set_exit_flag");
+#endif
     *(void **)&LINK_camframe_terminate =
         ::dlsym(libmmcamera, "camframe_terminate");
 
@@ -4010,7 +4014,9 @@ ALOGI("%s Got preview dimension as %d x %d ", __func__, previewWidth, previewHei
         } else {
             camframeParams.cammode = CAMERA_MODE_2D;
         }
+#ifdef HAVE_CAM_FRAME_SET_EXIT_FALG
         LINK_cam_frame_set_exit_flag(0);
+#endif
 
         mFrameThreadRunning = !pthread_create(&mFrameThread,
                                               &attr,

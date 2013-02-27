@@ -3040,24 +3040,6 @@ void QualcommCameraHardware::runPreviewThread(void *data)
          mLastQueuedFrame = (void *)frame->buffer;
          bufferIndex = mapBuffer(frame);
 
-         // if 7x27A && yv12 is set as preview format use convert routines to
-         // convert from YUV420sp to YV12
-         yuv_image_type in_buf, out_buf;
-         int conversion_result = 0;
-
-         if(( mPreviewFormat == CAMERA_YUV_420_YV12 ) &&
-           ( mCurrentTarget == TARGET_MSM7627A || mCurrentTarget == TARGET_MSM7627 )){
-            // if the width is not multiple of 32,
-            //we cannot do inplace conversion as sizes of 420sp and YV12 frames differ
-            if(previewWidth%32){
-            } else {
-               ALOGI("Doing inplace conversion from 420sp to yv12");
-               in_buf.imgPtr = (unsigned char *)mPreviewMapped[bufferIndex]->data;
-               in_buf.dx  = previewWidth;
-               in_buf.dy  = previewHeight;
-            }
-         }
-
          if(bufferIndex >= 0) {
            //Need to encapsulate this in IMemory object and send
 

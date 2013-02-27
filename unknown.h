@@ -259,4 +259,14 @@ typedef struct {
   int format3d;
 } encode_params_t;
 
+typedef struct {
+  int num_captures;
+  int picture_width;
+  int picture_height;
+  int postview_width;
+  int postview_height;
+  int thumbnail_width;
+  int thumbnail_height;
+} capture_params_t;
+
 #endif /* __UNKONWN_H__ */

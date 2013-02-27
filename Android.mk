@@ -31,7 +31,8 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS:=                                \
   -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)  \
-  -DMSM_MAX_CAMERA_SENSORS=1
+  -DMSM_MAX_CAMERA_SENSORS=1                  \
+  -DNUM_PREVIEW_BUFFERS=4
 
 LOCAL_HAL_FILES :=            \
   QualcommCamera.cpp          \
@@ -39,7 +40,6 @@ LOCAL_HAL_FILES :=            \
 
 LOCAL_SRC_FILES := $(LOCAL_HAL_FILES)
 
-LOCAL_CFLAGS += -DNUM_PREVIEW_BUFFERS=4
 
 LOCAL_C_INCLUDES +=                      \
   hardware/qcom/display/libgralloc       \

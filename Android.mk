@@ -44,7 +44,8 @@ LOCAL_SRC_FILES := $(LOCAL_HAL_FILES)
 LOCAL_C_INCLUDES +=                      \
   hardware/qcom/display/libgralloc       \
   hardware/qcom/display/libgenlock       \
-  hardware/qcom/media/libstagefrighthw
+  hardware/qcom/media/libstagefrighthw   \
+  device/panasonic/p01d/include/linux
 
 
 LOCAL_SHARED_LIBRARIES:=  \

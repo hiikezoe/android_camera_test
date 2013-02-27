@@ -185,7 +185,7 @@ typedef enum {
 typedef struct {
   mm_camera_event_type event_type;
   union {
-    msm_frame *yuv_frames;
+    struct msm_frame **yuv_frames;
     mm_camera_buffer_t *encoded_frame;
   } event_data;
 } mm_camera_event;

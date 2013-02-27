@@ -680,18 +680,6 @@ typedef enum {
   CAMERA_MAX_ANTIBANDING,
 } camera_antibanding_type;
 
-/* Enum Type for different ISO Mode supported */
-typedef enum {
-  CAMERA_ISO_AUTO = 0,
-  CAMERA_ISO_DEBLUR,
-  CAMERA_ISO_100,
-  CAMERA_ISO_200,
-  CAMERA_ISO_400,
-  CAMERA_ISO_800,
-  CAMERA_ISO_1600,
-  CAMERA_ISO_MAX
-} camera_iso_mode_type;
-
 typedef enum {
   MM_CAMERA_FACIAL_FEATURE_FD, // facial detection
   MM_CAMERA_FACIAL_FEATURE_MAX
@@ -1040,17 +1028,6 @@ typedef struct {
   } e;
 } mm_camera_event_t;
 
-/* Auto focus mode, used for CAMERA_PARM_AF_MODE */
-typedef enum {
-  AF_MODE_UNCHANGED = -1,
-  AF_MODE_NORMAL    = 0,
-  AF_MODE_MACRO,
-  AF_MODE_AUTO,
-  AF_MODE_CAF,
-  AF_MODE_INFINITY,
-  AF_MODE_MAX
-} isp3a_af_mode_t;
-
 typedef struct {
   uint32_t  in1_w;
   uint32_t  out1_w;
@@ -1062,16 +1039,6 @@ typedef struct {
   uint32_t  out2_h;
   uint8_t update_flag;
 } common_crop_t;
-
-typedef enum {
-  LED_MODE_OFF,
-  LED_MODE_AUTO,
-  LED_MODE_ON,
-  LED_MODE_TORCH,
-
-  /*new mode above should be added above this line*/
-  LED_MODE_MAX
-} led_mode_t;
 
 typedef struct {
   int is_checking_af_retry;
@@ -1115,13 +1082,6 @@ typedef struct {
   float exp_time;
 } focus_distances_info_t;
 
-enum msm_st_frame_packing {
-  SIDE_BY_SIDE_HALF,
-  SIDE_BY_SIDE_FULL,
-  TOP_DOWN_HALF,
-  TOP_DOWN_FULL,
-};
-
 typedef enum msm_st_frame_packing cam_3d_frame_format_t;
 
 typedef struct {
@@ -1130,43 +1090,11 @@ typedef struct {
 }camera_3d_frame_t;
 
 typedef enum {
-    CAMERA_BESTSHOT_OFF = 0,
-    CAMERA_BESTSHOT_AUTO = 1,
-    CAMERA_BESTSHOT_LANDSCAPE = 2,
-    CAMERA_BESTSHOT_SNOW,
-    CAMERA_BESTSHOT_BEACH,
-    CAMERA_BESTSHOT_SUNSET,
-    CAMERA_BESTSHOT_NIGHT,
-    CAMERA_BESTSHOT_PORTRAIT,
-    CAMERA_BESTSHOT_BACKLIGHT,
-    CAMERA_BESTSHOT_SPORTS,
-    CAMERA_BESTSHOT_ANTISHAKE,
-    CAMERA_BESTSHOT_FLOWERS,
-    CAMERA_BESTSHOT_CANDLELIGHT,
-    CAMERA_BESTSHOT_FIREWORKS,
-    CAMERA_BESTSHOT_PARTY,
-    CAMERA_BESTSHOT_NIGHT_PORTRAIT,
-    CAMERA_BESTSHOT_THEATRE,
-    CAMERA_BESTSHOT_ACTION,
-    CAMERA_BESTSHOT_AR,
-    CAMERA_BESTSHOT_MAX
-} camera_bestshot_mode_type;
-
-typedef enum {
   AUTO = 1,
   SPOT,
   CENTER_WEIGHTED,
   AVERAGE
 } cam_af_focusrect_t;
-
-typedef enum {
-  CAMERA_AEC_FRAME_AVERAGE,
-  CAMERA_AEC_CENTER_WEIGHTED,
-  CAMERA_AEC_SPOT_METERING,
-  CAMERA_AEC_SMART_METERING,
-  CAMERA_AEC_USER_METERING,
-  CAMERA_AEC_MAX_MODES
-} camera_auto_exposure_mode_type;
 
 typedef enum {
   FPS_MODE_AUTO,
@@ -1204,52 +1132,6 @@ typedef struct {
     uint16_t user_input_display_width;
     uint16_t user_input_display_height;
 } USER_INPUT_DISPLAY_T;
-
-#if defined CAMERA_WB_AUTO
-#undef CAMERA_WB_AUTO
-#endif
-
-#if defined CAMERA_WB_CUSTOM
-#undef CAMERA_WB_CUSTOM
-#endif
-
-#if defined  CAMERA_WB_INCANDESCENT
-#undef CAMERA_WB_INCANDESCENT
-#endif
-
-#if defined CAMERA_WB_FLUORESCENT
-#undef CAMERA_WB_FLUORESCENT
-#endif
-
-#if defined CAMERA_WB_DAYLIGHT
-#undef CAMERA_WB_DAYLIGHT
-#endif
-
-#if defined CAMERA_WB_CLOUDY_DAYLIGHT
-#undef CAMERA_WB_CLOUDY_DAYLIGHT
-#endif
-
-#if defined CAMERA_WB_TWILIGHT
-#undef CAMERA_WB_TWILIGHT
-#endif
-
-#if defined CAMERA_WB_SHADE
-#undef CAMERA_WB_SHADE
-#endif
-
-typedef enum {
-  CAMERA_WB_MIN_MINUS_1,
-  CAMERA_WB_AUTO = 1,
-  CAMERA_WB_CUSTOM,
-  CAMERA_WB_INCANDESCENT,
-  CAMERA_WB_FLUORESCENT,
-  CAMERA_WB_DAYLIGHT,
-  CAMERA_WB_CLOUDY_DAYLIGHT,
-  CAMERA_WB_TWILIGHT,
-  CAMERA_WB_SHADE,
-  CAMERA_WB_OFF,
-  CAMERA_WB_MAX_PLUS_1
-} config3a_wb_t;
 
 /******************************************************************************
  * Function: exif_set_tag

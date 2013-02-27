@@ -2313,7 +2313,7 @@ status_t QualcommCameraHardware::dump(int fd,
 }
 
 /* Issue ioctl calls related to starting Camera Operations*/
-bool static native_start_ops(mm_camera_ops_type_t  type, void* value)
+bool static native_start_ops(mm_camera_legacy_ops_type_t  type, void* value)
 {
     if(mCamOps.mm_camera_start(type, value,NULL) != MM_CAMERA_SUCCESS) {
         ALOGE("native_start_ops: type %d error %s",
@@ -2324,7 +2324,7 @@ bool static native_start_ops(mm_camera_ops_type_t  type, void* value)
 }
 
 /* Issue ioctl calls related to stopping Camera Operations*/
-bool static native_stop_ops(mm_camera_ops_type_t  type, void* value)
+bool static native_stop_ops(mm_camera_legacy_ops_type_t  type, void* value)
 {
      if(mCamOps.mm_camera_stop(type, value,NULL) != MM_CAMERA_SUCCESS) {
         ALOGE("native_stop_ops: type %d error %s",
@@ -5032,7 +5032,7 @@ void QualcommCameraHardware::release()
         ALOGI("release: stopPreviewInternal done.");
     }
     LINK_jpeg_encoder_join();
-    mm_camera_ops_type_t current_ops_type = (mSnapshotFormat
+    mm_camera_legacy_ops_type_t current_ops_type = (mSnapshotFormat
             == PICTURE_FORMAT_JPEG) ? CAMERA_OPS_CAPTURE_AND_ENCODE
             : CAMERA_OPS_RAW_CAPTURE;
     mCamOps.mm_camera_deinit(current_ops_type, NULL, NULL);
@@ -5775,7 +5775,7 @@ void QualcommCameraHardware::runSnapshotThread(void *data)
     mJpegThreadRunning = true;
     mJpegThreadWait.signal();
     mJpegThreadWaitLock.unlock();
-    mm_camera_ops_type_t current_ops_type = (mSnapshotFormat == PICTURE_FORMAT_JPEG) ?
+    mm_camera_legacy_ops_type_t current_ops_type = (mSnapshotFormat == PICTURE_FORMAT_JPEG) ?
                                              CAMERA_OPS_CAPTURE_AND_ENCODE :
                                               CAMERA_OPS_RAW_CAPTURE;
     if(strTexturesOn == true) {
@@ -5955,7 +5955,7 @@ status_t QualcommCameraHardware::takePicture()
 
     mFrameThreadWaitLock.unlock();
 
-    mm_camera_ops_type_t current_ops_type = (mSnapshotFormat == PICTURE_FORMAT_JPEG) ?
+    mm_camera_legacy_ops_type_t current_ops_type = (mSnapshotFormat == PICTURE_FORMAT_JPEG) ?
                                              CAMERA_OPS_CAPTURE_AND_ENCODE :
                                               CAMERA_OPS_RAW_CAPTURE;
     if(strTexturesOn == true)
@@ -9870,7 +9870,7 @@ void QualcommCameraHardware::encodeData() {
         mJpegThreadWaitLock.lock();
             mJpegThreadRunning = true;
             mJpegThreadWaitLock.unlock();
-            mm_camera_ops_type_t current_ops_type = CAMERA_OPS_ENCODE;
+            mm_camera_legacy_ops_type_t current_ops_type = CAMERA_OPS_ENCODE;
             mCamOps.mm_camera_start(current_ops_type,(void *)&mImageCaptureParms,
                                      (void *)&mImageEncodeParms);
             //Wait until jpeg encoding is done and clear the resources.

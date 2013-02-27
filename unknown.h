@@ -281,4 +281,12 @@ typedef struct {
   int thumbnail_height;
 } zsl_capture_params_t;
 
+typedef struct {
+  int picture_width;
+  int picture_height;
+  int preview_width;
+  int preview_height;
+  bool useExternalBuffers;
+} zsl_params_t;
+
 #endif /* __UNKONWN_H__ */

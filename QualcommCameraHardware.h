@@ -21,6 +21,7 @@
 #define ICS
 
 //#include <camera/CameraHardwareInterface.h>
+#include <media/msm_camera.h>
 #include <utils/threads.h>
 #include <binder/MemoryBase.h>
 #include <binder/MemoryHeapBase.h>

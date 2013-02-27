@@ -174,8 +174,11 @@ private:
     bool native_set_dimension (int camfd);
     bool native_jpeg_encode (void);
     bool updatePictureDimension(const QCameraParameters& params, int& width, int& height);
-    bool native_set_parms(camera_parm_type_t type, uint16_t length, void *value);
-    bool native_set_parms(camera_parm_type_t type, uint16_t length, void *value, int *result);
+    bool native_set_parms(const char *type_name,
+                          camera_parm_type_t type,
+                          uint16_t length,
+                          void *value,
+                          int *result);
     bool native_zoom_image(int fd, int srcOffset, int dstOffset, common_crop_t *crop);
 
     status_t startInitialPreview();

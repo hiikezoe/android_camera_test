@@ -104,6 +104,12 @@ extern "C" {
 #define NUM_YV12_FRAMES 1
 #define FOCUS_AREA_INIT "(-1000,-1000,1000,1000,1000)"
 
+#define NATIVE_SET_PARMS(type, length, value)           \
+native_set_parms(#type, (type), (length), (value), 0);
+
+#define NATIVE_SET_PARMS_WITH_RESULT(type, length, value, result)  \
+native_set_parms(#type, (type), (length), (value), result);
+
 void *libmmcamera;
 void* (*LINK_cam_conf)(void *data);
 void* (*LINK_cam_frame)(void *data);
@@ -1642,7 +1648,7 @@ void QualcommCameraHardware::initDefaultParameters()
             thumbnail_sizes[DEFAULT_THUMBNAIL_SETTING].width;
     mDimension.ui_thumbnail_height =
             thumbnail_sizes[DEFAULT_THUMBNAIL_SETTING].height;
-    bool ret = native_set_parms(CAMERA_PARM_DIMENSION,
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_DIMENSION,
                sizeof(cam_ctrl_dimension_t),(void *) &mDimension);
     if(ret != true) {
         ALOGE("CAMERA_PARM_DIMENSION failed!!!");
@@ -2588,7 +2594,7 @@ bool QualcommCameraHardware::initImageEncodeParameters(int size)
         //camera stack, pass default value.
         if(jpeg_quality == 0) jpeg_quality = 85;
         mImageEncodeParms.quality = jpeg_quality;
-        ret = native_set_parms(CAMERA_PARM_JPEG_MAINIMG_QUALITY, sizeof(int), &jpeg_quality);
+        ret = NATIVE_SET_PARMS(CAMERA_PARM_JPEG_MAINIMG_QUALITY, sizeof(int), &jpeg_quality);
         if(!ret){
           ALOGE("initJpegParametersX: failed to set main image quality");
           return false;
@@ -2606,7 +2612,7 @@ bool QualcommCameraHardware::initImageEncodeParameters(int size)
              thumbnail_quality);
         /* TODO: check with mm-camera? */
         mImageEncodeParms.quality = thumbnail_quality;
-        ret = native_set_parms(CAMERA_PARM_JPEG_THUMB_QUALITY, sizeof(int), &thumbnail_quality);
+        ret = NATIVE_SET_PARMS(CAMERA_PARM_JPEG_THUMB_QUALITY, sizeof(int), &thumbnail_quality);
         if(!ret){
           ALOGE("initJpegParameters X: failed to set thumbnail quality");
           return false;
@@ -2676,29 +2682,24 @@ bool QualcommCameraHardware::initImageEncodeParameters(int size)
 }
 
 bool QualcommCameraHardware::native_set_parms(
-    camera_parm_type_t type, uint16_t length, void *value)
+    const char *type_name,
+    camera_parm_type_t type,
+    uint16_t length, void *value,
+    int *result)
 {
-    if(mCfgControl.mm_camera_set_parm(type,value) != MM_CAMERA_SUCCESS) {
-        ALOGE("native_set_parms failed: type %d length %d error %s",
-            type, length, strerror(errno));
-        return false;
-    }
-    return true;
+    ALOGV("native_set_parms %s(%d) length = %d value = %d",
+          type_name, type, length, *(int *)value);
 
-}
-bool QualcommCameraHardware::native_set_parms(
-    camera_parm_type_t type, uint16_t length, void *value, int *result)
-{
-    mm_camera_status_t status;
-    status = mCfgControl.mm_camera_set_parm(type,value);
-    ALOGI("native_set_parms status = %d", status);
-    if( status == MM_CAMERA_SUCCESS || status == MM_CAMERA_ERR_INVALID_OPERATION){
-        *result = status ;
+    mm_camera_status_t status = mCfgControl.mm_camera_set_parm(type, value);
+    if (result) {
+        *result = status;
+    }
+
+    if (status == MM_CAMERA_SUCCESS) {
         return true;
     }
-    ALOGE("%s: type %d length %d error %s, status %d", __FUNCTION__,
-                                       type, length, strerror(errno), status);
-   *result = status;
+    ALOGE("native_set_parms failed: type %s(%d) length = %d error = %s",
+          type_name, type, length, strerror(errno));
     return false;
 }
 
@@ -3846,7 +3847,7 @@ ALOGI("%s Got preview dimension as %d x %d ", __func__, previewWidth, previewHei
     // mDimension will be filled with thumbnail_width, thumbnail_height,
     // orig_picture_dx, and orig_picture_dy after this function call. We need to
     // keep it for jpeg_encoder_encode.
-    bool ret = native_set_parms(CAMERA_PARM_DIMENSION,
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_DIMENSION,
                                sizeof(cam_ctrl_dimension_t), &mDimension);
 #if 0
     if(mIs3DModeOn != true) {
@@ -4041,7 +4042,7 @@ bool QualcommCameraHardware::initRawSnapshot()
     const char * pmem_region;
 
     //get width and height from Dimension Object
-    bool ret = native_set_parms(CAMERA_PARM_DIMENSION,
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_DIMENSION,
                                sizeof(cam_ctrl_dimension_t), &mDimension);
 
 
@@ -4508,7 +4509,7 @@ bool QualcommCameraHardware::initRaw(bool initJpegHeap)
     // mDimension will be filled with thumbnail_width, thumbnail_height,
     // orig_picture_dx, and orig_picture_dy after this function call. We need to
     // keep it for jpeg_encoder_encode.
-    bool ret = native_set_parms(CAMERA_PARM_DIMENSION,
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_DIMENSION,
                                sizeof(cam_ctrl_dimension_t), &mDimension);
 
     if(!ret) {
@@ -4556,7 +4557,7 @@ bool QualcommCameraHardware::initRaw(bool initJpegHeap)
 
     if (mIs3DModeOn)
         rotation = 0;
-    ret = native_set_parms(CAMERA_PARM_JPEG_ROTATION, sizeof(int), &rotation);
+    ret = NATIVE_SET_PARMS(CAMERA_PARM_JPEG_ROTATION, sizeof(int), &rotation);
     if(!ret){
         ALOGE("setting camera id failed");
         return false;
@@ -5195,7 +5196,7 @@ status_t QualcommCameraHardware::startInitialPreview() {
     ALOGV("mDimension.display_chroma_width = %d", mDimension.display_chroma_width);
     ALOGV("mDimension.display_chroma_height = %d", mDimension.display_chroma_height);
 
-    native_set_parms(CAMERA_PARM_DIMENSION,
+    NATIVE_SET_PARMS(CAMERA_PARM_DIMENSION,
               sizeof(cam_ctrl_dimension_t), &mDimension);
     ALOGV(" %s : mDimension.video_width = %d mDimension.video_height = %d", __FUNCTION__,
              mDimension.video_width, mDimension.video_height);
@@ -5945,7 +5946,7 @@ status_t QualcommCameraHardware::takePicture()
     }
     else {
         int rotation = mParameters.getInt("rotation");
-        native_set_parms(CAMERA_PARM_JPEG_ROTATION, sizeof(int), &rotation);
+        NATIVE_SET_PARMS(CAMERA_PARM_JPEG_ROTATION, sizeof(int), &rotation);
     }
 #if 0    // TODO for ICS
     if(mCurrentTarget == TARGET_MSM8660) {
@@ -6339,7 +6340,7 @@ status_t QualcommCameraHardware::runFaceDetection()
                 mMetaDataHeap.clear();
         }
         mMetaDataWaitLock.unlock();
-        ret = native_set_parms(CAMERA_PARM_FD, sizeof(int8_t), (void *)&value);
+        ret = NATIVE_SET_PARMS(CAMERA_PARM_FD, sizeof(int8_t), (void *)&value);
         return ret ? NO_ERROR : UNKNOWN_ERROR;
     }
     ALOGE("Invalid Face Detection value: %s", (str == NULL) ? "NULL" : str);
@@ -7046,7 +7047,7 @@ status_t QualcommCameraHardware::setDIS() {
     disCtrl.video_rec_height = videoHeight;
     disCtrl.output_cbcr_offset = video_frame_cbcroffset;
 
-    ret = native_set_parms( CAMERA_PARM_VIDEO_DIS,
+    ret = NATIVE_SET_PARMS( CAMERA_PARM_VIDEO_DIS,
                        sizeof(disCtrl), &disCtrl);
 
     ALOGV("setDIS X (%d)", ret);
@@ -7076,7 +7077,7 @@ status_t QualcommCameraHardware::setVpeParameters()
     }
     ALOGV("rotCtrl.rotation = %d", rotCtrl.rotation);
 
-    ret = native_set_parms(CAMERA_PARM_VIDEO_ROT,
+    ret = NATIVE_SET_PARMS(CAMERA_PARM_VIDEO_ROT,
                            sizeof(rotCtrl), &rotCtrl);
 
     ALOGV("setVpeParameters X (%d)", ret);
@@ -7903,7 +7904,7 @@ status_t QualcommCameraHardware::setPreviewFrameRate(const QCameraParameters& pa
 
     if(MINIMUM_FPS <= fps && fps <=MAXIMUM_FPS){
         mParameters.setPreviewFrameRate(fps);
-        bool ret = native_set_parms(CAMERA_PARM_FPS,
+        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_FPS,
                 sizeof(fps), (void *)&fps);
         return ret ? NO_ERROR : UNKNOWN_ERROR;
     }
@@ -7926,13 +7927,13 @@ status_t QualcommCameraHardware::setPreviewFrameRateMode(const QCameraParameters
     if(frameRateMode != NOT_FOUND) {
         ALOGV("setPreviewFrameRateMode: %s ", str);
         mParameters.setPreviewFrameRateMode(str);
-        bool ret = native_set_parms(CAMERA_PARM_FPS_MODE, sizeof(frameRateMode), (void *)&frameRateMode);
+        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_FPS_MODE, sizeof(frameRateMode), (void *)&frameRateMode);
         if(!ret) return ret;
         //set the fps value when chaging modes
         int16_t fps = (uint16_t)params.getPreviewFrameRate();
         if(MINIMUM_FPS <= fps && fps <=MAXIMUM_FPS){
             mParameters.setPreviewFrameRate(fps);
-            ret = native_set_parms(CAMERA_PARM_FPS,
+            ret = NATIVE_SET_PARMS(CAMERA_PARM_FPS,
                                         sizeof(fps), (void *)&fps);
             return ret ? NO_ERROR : UNKNOWN_ERROR;
         }
@@ -8056,7 +8057,7 @@ status_t QualcommCameraHardware::setEffect(const QCameraParameters& params)
                return NO_ERROR;
            }else {
                mParameters.set(QCameraParameters::KEY_EFFECT, str);
-               bool ret = native_set_parms(CAMERA_PARM_EFFECT, sizeof(value),
+               bool ret = NATIVE_SET_PARMS_WITH_RESULT(CAMERA_PARM_EFFECT, sizeof(value),
                                            (void *)&value,(int *)&result);
                 if(result == MM_CAMERA_ERR_INVALID_OPERATION) {
                     ALOGI("Camera Effect: %s is not set as the selected value is not supported ", str);
@@ -8079,7 +8080,7 @@ status_t QualcommCameraHardware::setRecordingHint(const QCameraParameters& param
                                   sizeof(recording_Hints) / sizeof(str_map), str);
       if(value != NOT_FOUND){
 
-        native_set_parms(CAMERA_PARM_RECORDING_HINT, sizeof(value),
+        NATIVE_SET_PARMS(CAMERA_PARM_RECORDING_HINT, sizeof(value),
                                                (void *)&value);
         /*native_set_parms(CAMERA_PARM_CAF_ENABLE, sizeof(value),
                                                (void *)&value);*/
@@ -8110,7 +8111,7 @@ status_t QualcommCameraHardware::setExposureCompensation(
 
         mParameters.set(QCameraParameters::KEY_EXPOSURE_COMPENSATION,
                             numerator);
-       bool ret = native_set_parms(CAMERA_PARM_EXPOSURE_COMPENSATION,
+       bool ret = NATIVE_SET_PARMS(CAMERA_PARM_EXPOSURE_COMPENSATION,
                                     sizeof(value), (void *)&value);
        ALOGI("DEBBUG: %s ret = %d X",__FUNCTION__, ret);
        return ret ? NO_ERROR : UNKNOWN_ERROR;
@@ -8130,7 +8131,7 @@ status_t QualcommCameraHardware::setAutoExposure(const QCameraParameters& params
         int32_t value = attr_lookup(autoexposure, sizeof(autoexposure) / sizeof(str_map), str);
         if (value != NOT_FOUND) {
             mParameters.set(QCameraParameters::KEY_AUTO_EXPOSURE, str);
-            bool ret = native_set_parms(CAMERA_PARM_EXPOSURE, sizeof(value),
+            bool ret = NATIVE_SET_PARMS(CAMERA_PARM_EXPOSURE, sizeof(value),
                                        (void *)&value);
             return ret ? NO_ERROR : UNKNOWN_ERROR;
         }
@@ -8152,7 +8153,7 @@ status_t QualcommCameraHardware::setSharpness(const QCameraParameters& params)
 
     ALOGV("setting sharpness %d", sharpness);
     mParameters.set(QCameraParameters::KEY_SHARPNESS, sharpness);
-    bool ret = native_set_parms(CAMERA_PARM_SHARPNESS, sizeof(sharpness),
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_SHARPNESS, sizeof(sharpness),
                                (void *)&sharpness);
     return ret ? NO_ERROR : UNKNOWN_ERROR;
 }
@@ -8175,7 +8176,7 @@ status_t QualcommCameraHardware::setContrast(const QCameraParameters& params)
 
         ALOGV("setting contrast %d", contrast);
         mParameters.set(QCameraParameters::KEY_CONTRAST, contrast);
-        bool ret = native_set_parms(CAMERA_PARM_CONTRAST, sizeof(contrast),
+        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_CONTRAST, sizeof(contrast),
                                    (void *)&contrast);
         return ret ? NO_ERROR : UNKNOWN_ERROR;
     } else {
@@ -8200,7 +8201,7 @@ status_t QualcommCameraHardware::setSaturation(const QCameraParameters& params)
 
     ALOGV("Setting saturation %d", saturation);
     mParameters.set(QCameraParameters::KEY_SATURATION, saturation);
-    bool ret = native_set_parms(CAMERA_PARM_SATURATION, sizeof(saturation),
+    bool ret = NATIVE_SET_PARMS_WITH_RESULT(CAMERA_PARM_SATURATION, sizeof(saturation),
         (void *)&saturation, (int *)&result);
     if(result == MM_CAMERA_ERR_INVALID_OPERATION)
         ALOGI("Saturation Value: %d is not set as the selected value is not supported", saturation);
@@ -8216,7 +8217,7 @@ status_t QualcommCameraHardware::setPreviewFormat(const QCameraParameters& param
         mPreviewFormat = previewFormat;
         if(HAL_currentCameraMode != CAMERA_MODE_3D) {
             ALOGI("Setting preview format to native");
-            bool ret = native_set_parms(CAMERA_PARM_PREVIEW_FORMAT, sizeof(previewFormat),
+            bool ret = NATIVE_SET_PARMS(CAMERA_PARM_PREVIEW_FORMAT, sizeof(previewFormat),
                                        (void *)&previewFormat);
         }else{
             ALOGI("Skipping set preview format call to native");
@@ -8251,7 +8252,7 @@ status_t QualcommCameraHardware::setBrightness(const QCameraParameters& params) 
         ALOGV(" new brightness value : %d ", brightness);
         mBrightness =  brightness;
         mParameters.set("luma-adaptation", brightness);
-    bool ret = native_set_parms(CAMERA_PARM_BRIGHTNESS, sizeof(mBrightness),
+    bool ret = NATIVE_SET_PARMS(CAMERA_PARM_BRIGHTNESS, sizeof(mBrightness),
                                    (void *)&mBrightness);
         return ret ? NO_ERROR : UNKNOWN_ERROR;
     }
@@ -8268,7 +8269,7 @@ status_t QualcommCameraHardware::setSkinToneEnhancement(const QCameraParameters&
           ALOGV(" new skinTone correction value : %d ", skinToneValue);
           mSkinToneEnhancement = skinToneValue;
           mParameters.set("skinToneEnhancement", skinToneValue);
-          bool ret = native_set_parms(CAMERA_PARM_SCE_FACTOR, sizeof(mSkinToneEnhancement),
+          bool ret = NATIVE_SET_PARMS(CAMERA_PARM_SCE_FACTOR, sizeof(mSkinToneEnhancement),
                         (void *)&mSkinToneEnhancement);
           return ret ? NO_ERROR : UNKNOWN_ERROR;
     }
@@ -8289,7 +8290,7 @@ status_t QualcommCameraHardware::setWhiteBalance(const QCameraParameters& params
         int32_t value = attr_lookup(whitebalance, sizeof(whitebalance) / sizeof(str_map), str);
         if (value != NOT_FOUND) {
             mParameters.set(QCameraParameters::KEY_WHITE_BALANCE, str);
-            bool ret = native_set_parms(CAMERA_PARM_WHITE_BALANCE, sizeof(value),
+            bool ret = NATIVE_SET_PARMS_WITH_RESULT(CAMERA_PARM_WHITE_BALANCE, sizeof(value),
                                        (void *)&value, (int *)&result);
             if(result == MM_CAMERA_ERR_INVALID_OPERATION) {
                 ALOGI("WhiteBalance Value: %s is not set as the selected value is not supported ", str);
@@ -8314,7 +8315,7 @@ status_t QualcommCameraHardware::setFlash(const QCameraParameters& params)
         int32_t value = attr_lookup(flash, sizeof(flash) / sizeof(str_map), str);
         if (value != NOT_FOUND) {
             mParameters.set(QCameraParameters::KEY_FLASH_MODE, str);
-            bool ret = native_set_parms(CAMERA_PARM_LED_MODE,
+            bool ret = NATIVE_SET_PARMS(CAMERA_PARM_LED_MODE,
                                        sizeof(value), (void *)&value);
             if(mZslEnable && (value != LED_MODE_OFF)){
                     mParameters.set("num-snaps-per-shutter", "1");
@@ -8342,7 +8343,7 @@ status_t QualcommCameraHardware::setAntibanding(const QCameraParameters& params)
         if (value != NOT_FOUND) {
             camera_antibanding_type temp = (camera_antibanding_type) value;
             mParameters.set(QCameraParameters::KEY_ANTIBANDING, str);
-            bool ret = native_set_parms(CAMERA_PARM_ANTIBANDING,
+            bool ret = NATIVE_SET_PARMS_WITH_RESULT(CAMERA_PARM_ANTIBANDING,
                        sizeof(camera_antibanding_type), (void *)&temp ,(int *)&result);
             if(result == MM_CAMERA_ERR_INVALID_OPERATION) {
                 ALOGI("AntiBanding Value: %s is not supported for the given BestShot Mode", str);
@@ -8369,7 +8370,7 @@ status_t QualcommCameraHardware::setMCEValue(const QCameraParameters& params)
             ALOGI("%s: setting MCE value of %s", __FUNCTION__, str);
             mParameters.set(QCameraParameters::KEY_MEMORY_COLOR_ENHANCEMENT, str);
 
-            native_set_parms(CAMERA_PARM_MCE, sizeof(int8_t), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_MCE, sizeof(int8_t), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8409,7 +8410,7 @@ status_t QualcommCameraHardware::setHighFrameRate(const QCameraParameters& param
                     return NO_ERROR;
                 }
             }
-            native_set_parms(CAMERA_PARM_HFR, sizeof(int32_t), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_HFR, sizeof(int32_t), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8440,7 +8441,7 @@ status_t QualcommCameraHardware::setHDRImaging(const QCameraParameters& params)
                 numCapture = temp.total_hal_frames;
             } else
                 numCapture = 1;
-            native_set_parms(CAMERA_PARM_HDR, sizeof(exp_bracketing_t), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_HDR, sizeof(exp_bracketing_t), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8476,7 +8477,7 @@ status_t QualcommCameraHardware::setExpBracketing(const QCameraParameters& param
         if(!mZslEnable){
             numCapture = temp.total_frames;
         }
-        native_set_parms(CAMERA_PARM_HDR, sizeof(exp_bracketing_t), (void *)&temp);
+        NATIVE_SET_PARMS(CAMERA_PARM_HDR, sizeof(exp_bracketing_t), (void *)&temp);
         return NO_ERROR;
     } else
         mExpBracketMode = false;
@@ -8498,7 +8499,7 @@ status_t QualcommCameraHardware::setLensshadeValue(const QCameraParameters& para
             int8_t temp = (int8_t)value;
             mParameters.set(QCameraParameters::KEY_LENSSHADE, str);
 
-            native_set_parms(CAMERA_PARM_ROLLOFF, sizeof(int8_t), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_ROLLOFF, sizeof(int8_t), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8514,7 +8515,7 @@ status_t QualcommCameraHardware::setSelectableZoneAf(const QCameraParameters& pa
             int32_t value = attr_lookup(selectable_zone_af, sizeof(selectable_zone_af) / sizeof(str_map), str);
             if (value != NOT_FOUND) {
                 mParameters.set(QCameraParameters::KEY_SELECTABLE_ZONE_AF, str);
-                bool ret = native_set_parms(CAMERA_PARM_FOCUS_RECT, sizeof(value),
+                bool ret = NATIVE_SET_PARMS(CAMERA_PARM_FOCUS_RECT, sizeof(value),
                         (void *)&value);
                 return ret ? NO_ERROR : UNKNOWN_ERROR;
             }
@@ -8595,8 +8596,8 @@ status_t QualcommCameraHardware::setTouchAfAec(const QCameraParameters& params)
                     af_roi_value.roi[0].dx = FOCUS_RECTANGLE_DX;
                     af_roi_value.roi[0].dy = FOCUS_RECTANGLE_DY;
                     af_roi_value.is_multiwindow = mMultiTouch;
-                    native_set_parms(CAMERA_PARM_AEC_ROI, sizeof(cam_set_aec_roi_t), (void *)&aec_roi_value);
-                    native_set_parms(CAMERA_PARM_AF_ROI, sizeof(roi_info_t), (void*)&af_roi_value);
+                    NATIVE_SET_PARMS(CAMERA_PARM_AEC_ROI, sizeof(cam_set_aec_roi_t), (void *)&aec_roi_value);
+                    NATIVE_SET_PARMS(CAMERA_PARM_AF_ROI, sizeof(roi_info_t), (void*)&af_roi_value);
                 }
                 else if(value == false) {
                     //Set Touch AEC params
@@ -8607,8 +8608,8 @@ status_t QualcommCameraHardware::setTouchAfAec(const QCameraParameters& params)
 
                     //Set Touch AF params
                     af_roi_value.num_roi = 0;
-                    native_set_parms(CAMERA_PARM_AEC_ROI, sizeof(cam_set_aec_roi_t), (void *)&aec_roi_value);
-                    native_set_parms(CAMERA_PARM_AF_ROI, sizeof(roi_info_t), (void*)&af_roi_value);
+                    NATIVE_SET_PARMS(CAMERA_PARM_AEC_ROI, sizeof(cam_set_aec_roi_t), (void *)&aec_roi_value);
+                    NATIVE_SET_PARMS(CAMERA_PARM_AF_ROI, sizeof(roi_info_t), (void*)&af_roi_value);
                 }
                 //@Punit: If the values are negative, we dont send anything to the lower layer
             }
@@ -8656,7 +8657,7 @@ status_t QualcommCameraHardware::setRedeyeReduction(const QCameraParameters& par
             ALOGI("%s: setting Redeye Reduction value of %s", __FUNCTION__, str);
             mParameters.set(QCameraParameters::KEY_REDEYE_REDUCTION, str);
 
-            native_set_parms(CAMERA_PARM_REDEYE_REDUCTION, sizeof(int8_t), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_REDEYE_REDUCTION, sizeof(int8_t), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8678,19 +8679,19 @@ status_t  QualcommCameraHardware::setISOValue(const QCameraParameters& params) {
             camera_iso_mode_type temp = (camera_iso_mode_type) value;
             if (value == CAMERA_ISO_DEBLUR) {
                temp_hjr = true;
-               native_set_parms(CAMERA_PARM_HJR, sizeof(int8_t), (void*)&temp_hjr);
+               NATIVE_SET_PARMS(CAMERA_PARM_HJR, sizeof(int8_t), (void*)&temp_hjr);
                mHJR = value;
             }
             else {
                if (mHJR == CAMERA_ISO_DEBLUR) {
                    temp_hjr = false;
-                   native_set_parms(CAMERA_PARM_HJR, sizeof(int8_t), (void*)&temp_hjr);
+                   NATIVE_SET_PARMS(CAMERA_PARM_HJR, sizeof(int8_t), (void*)&temp_hjr);
                    mHJR = value;
                }
             }
 
             mParameters.set(QCameraParameters::KEY_ISO_MODE, str);
-            native_set_parms(CAMERA_PARM_ISO, sizeof(camera_iso_mode_type), (void *)&temp);
+            NATIVE_SET_PARMS(CAMERA_PARM_ISO, sizeof(camera_iso_mode_type), (void *)&temp);
             return NO_ERROR;
         }
     }
@@ -8712,19 +8713,19 @@ status_t QualcommCameraHardware::setSceneDetect(const QCameraParameters& params)
             if (value != NOT_FOUND) {
                 mParameters.set(QCameraParameters::KEY_SCENE_DETECT, str);
 
-                retParm1 = native_set_parms(CAMERA_PARM_BL_DETECTION, sizeof(value),
+                retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
                                            (void *)&value);
 
-                retParm2 = native_set_parms(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
+                retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
                                            (void *)&value);
 
                 //All Auto Scene detection modes should be all ON or all OFF.
                 if(retParm1 == false || retParm2 == false) {
                     value = !value;
-                    retParm1 = native_set_parms(CAMERA_PARM_BL_DETECTION, sizeof(value),
+                    retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
                                                (void *)&value);
 
-                    retParm2 = native_set_parms(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
+                    retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
                                                (void *)&value);
                 }
                 return (retParm1 && retParm2) ? NO_ERROR : UNKNOWN_ERROR;
@@ -8750,7 +8751,7 @@ status_t QualcommCameraHardware::setSceneMode(const QCameraParameters& params)
         int32_t asd_val;
         if (value != NOT_FOUND) {
             mParameters.set(QCameraParameters::KEY_SCENE_MODE, str);
-            bool ret = native_set_parms(CAMERA_PARM_BESTSHOT_MODE, sizeof(value),
+            bool ret = NATIVE_SET_PARMS(CAMERA_PARM_BESTSHOT_MODE, sizeof(value),
                                        (void *)&value);
 
             if (ret == NO_ERROR) {
@@ -8758,9 +8759,9 @@ status_t QualcommCameraHardware::setSceneMode(const QCameraParameters& params)
               asd_val = false;
 
               /*note: we need to simplify this logic by using a single ctrl as in 8960*/
-              retParm1 = native_set_parms(CAMERA_PARM_BL_DETECTION, sizeof(value),
+              retParm1 = NATIVE_SET_PARMS(CAMERA_PARM_BL_DETECTION, sizeof(value),
                                          (void *)&asd_val);
-              retParm2 = native_set_parms(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
+              retParm2 = NATIVE_SET_PARMS(CAMERA_PARM_SNOW_DETECTION, sizeof(value),
                                          (void *)&asd_val);
             }
             return ret ? NO_ERROR : UNKNOWN_ERROR;
@@ -8884,7 +8885,7 @@ status_t QualcommCameraHardware::setZoom(const QCameraParameters& params)
     if(zoom_level >= 0 && zoom_level <= mMaxZoom-1) {
         mParameters.set("zoom", zoom_level);
         int32_t zoom_value = ZOOM_STEP * zoom_level;
-        bool ret = native_set_parms(CAMERA_PARM_ZOOM,
+        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_ZOOM,
             sizeof(zoom_value), (void *)&zoom_value);
         rc = ret ? NO_ERROR : UNKNOWN_ERROR;
     } else {
@@ -8907,7 +8908,7 @@ status_t QualcommCameraHardware::setDenoise(const QCameraParameters& params)
         if ((value != NOT_FOUND) &&  (mDenoiseValue != value)) {
         mDenoiseValue =  value;
         mParameters.set(QCameraParameters::KEY_DENOISE, str);
-        bool ret = native_set_parms(CAMERA_PARM_WAVELET_DENOISE, sizeof(value),
+        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_WAVELET_DENOISE, sizeof(value),
                                                (void *)&value);
         return ret ? NO_ERROR : UNKNOWN_ERROR;
         }
@@ -9060,7 +9061,7 @@ status_t QualcommCameraHardware::setFocusMode(const QCameraParameters& params)
                     cafSupport = true;
                 }
                 ALOGV("Continuous Auto Focus %d", cafSupport);
-                native_set_parms(CAMERA_PARM_CONTINUOUS_AF, sizeof(int8_t), (void *)&cafSupport);
+                NATIVE_SET_PARMS(CAMERA_PARM_CONTINUOUS_AF, sizeof(int8_t), (void *)&cafSupport);
             }
             // Focus step is reset to infinity when preview is started. We do
             // not need to do anything now.

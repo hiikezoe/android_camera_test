@@ -8997,7 +8997,7 @@ status_t QualcommCameraHardware::setMeteringAreas(const QCameraParameters& param
         // handling default string
         if ((strcmp("(-2000,-2000,-2000,-2000,0)", str) == 0) ||
             (strcmp("(0,0,0,0,0)", str) == 0)){
-          mParameters.set(QCameraParameters::KEY_METERING_AREAS, NULL);
+          mParameters.set(QCameraParameters::KEY_METERING_AREAS, 0);
           return NO_ERROR;
         }
         if(checkAreaParameters(str) != 0) {
@@ -9021,7 +9021,7 @@ status_t QualcommCameraHardware::setFocusAreas(const QCameraParameters& params)
         // handling default string
         if ((strcmp("(-2000,-2000,-2000,-2000,0)", str) == 0) ||
             (strcmp("(0,0,0,0,0)", str) == 0)) {
-          mParameters.set(QCameraParameters::KEY_FOCUS_AREAS, NULL);
+          mParameters.set(QCameraParameters::KEY_FOCUS_AREAS, 0);
           return NO_ERROR;
         }
 

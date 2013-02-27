@@ -34,6 +34,7 @@ LOCAL_CFLAGS :=                               \
   -DNUM_PREVIEW_BUFFERS=4
 
 LOCAL_HAL_FILES :=            \
+  QCameraParameters.cpp       \
   QualcommCamera.cpp          \
   QualcommCameraHardware.cpp
 

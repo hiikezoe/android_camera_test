@@ -234,6 +234,8 @@ typedef struct {
                                          void *arg1, void *arg2);
   mm_camera_status_t (*mm_camera_stop)  (mm_camera_legacy_ops_type_t type,
                                          void *arg1, void *arg2);
+  mm_camera_status_t (*mm_camera_init)  (mm_camera_legacy_ops_type_t type,
+                                         void *arg1, void *arg2);
   mm_camera_status_t (*mm_camera_deinit)(mm_camera_legacy_ops_type_t type,
                                          void *arg1, void *arg2);
 } mm_camera_ops;

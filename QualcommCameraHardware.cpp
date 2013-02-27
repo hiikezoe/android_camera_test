@@ -2285,13 +2285,20 @@ bool QualcommCameraHardware::startCamera()
         ALOGE("startCamera X: could not get snapshot sizes");
         return false;
     }
-     ALOGI("startCamera picture_sizes %p PICTURE_SIZE_COUNT %d", picture_sizes, PICTURE_SIZE_COUNT);
+    ALOGV("startCamera picture_sizes:");
+    for (unsigned int i = 0; i < PICTURE_SIZE_COUNT; i++) {
+        ALOGV("\t %u x %u", picture_sizes[i].width, picture_sizes[i].height);
+    }
+
     mCfgControl.mm_camera_query_parms(CAMERA_PARM_PREVIEW_SIZE, (void **)&preview_sizes, &PREVIEW_SIZE_COUNT);
     if ((preview_sizes == NULL) || (!PREVIEW_SIZE_COUNT)) {
         ALOGE("startCamera X: could not get preview sizes");
         return false;
     }
-    ALOGI("startCamera preview_sizes %p previewSizeCount %d", preview_sizes, PREVIEW_SIZE_COUNT);
+    ALOGV("startCamera preview_sizes:");
+    for (unsigned int i = 0; i < PREVIEW_SIZE_COUNT; i++) {
+        ALOGV("\t %u x %u", preview_sizes[i].width, preview_sizes[i].height);
+    }
 
 #ifdef HAVE_HFR_SIZE
     mCfgControl.mm_camera_query_parms(CAMERA_PARM_HFR_SIZE, (void **)&hfr_sizes, &HFR_SIZE_COUNT);

@@ -319,6 +319,34 @@ static camera_size_type jpeg_thumbnail_sizes[]  = {
     { 352, 288 },
     {0,0}
 };
+
+static struct fifo_node* dequeue(struct fifo_queue* q) {
+  struct fifo_node *tmp = q->front;
+
+  if (!tmp)
+      return 0;
+  if (q->front == q->back)
+      q->front = q->back = 0;
+  else if (q->front)
+          q->front = q->front->next;
+  tmp->next = 0;
+  q->num_of_frames -=1;
+  return tmp;
+}
+
+static void enqueue(struct fifo_queue* q, struct fifo_node*p) {
+  if (q->back) {
+      q->back->next = p;
+      q->back = p;
+  }
+  else {
+      q->front = p;
+      q->back = p;   
+  }
+  q->num_of_frames +=1;
+  return;
+}
+
 //supported preview fps ranges should be added to this array in the form (minFps,maxFps)
 static  android::FPSRange FpsRangesSupported[] = {{MINIMUM_FPS*1000,MAXIMUM_FPS*1000}};
 

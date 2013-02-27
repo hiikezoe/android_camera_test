@@ -240,4 +240,23 @@ typedef struct {
   camera_mode_t cammode;
 } cam_frame_start_parms;
 
+typedef struct {
+  exif_tags_info_t* exif_data;
+  int exif_numEntries;
+  mm_camera_buffer_t* p_output_buffer;
+  uint8_t buffer_count;
+  uint32_t rotation;
+  uint32_t quality;
+  int y_offset;
+  int cbcr_offset;
+  /* bitmask for the images to be encoded. if capture_and_encode
+   * option is selected, all the images will be encoded irrespective
+   * of bitmask.
+   */
+  uint8_t encodeBitMask;
+  uint32_t output_picture_width;
+  uint32_t output_picture_height;
+  int format3d;
+} encode_params_t;
+
 #endif /* __UNKONWN_H__ */

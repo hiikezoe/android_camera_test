@@ -1239,7 +1239,7 @@ void *openCamera(void *data) {
 
     if (!libmmcamera) {
         ALOGE("FATAL ERROR: could not dlopen liboemcamera.so: %s", dlerror());
-        return false;
+        return NULL;
     }
 
     *(void **)&LINK_mm_camera_init =
@@ -1254,7 +1254,7 @@ void *openCamera(void *data) {
 
     if (MM_CAMERA_SUCCESS != LINK_mm_camera_init(&mCfgControl, &mCamNotify, &mCamOps, 0)) {
         ALOGE("startCamera: mm_camera_init failed:");
-        return false;
+        return NULL;
         //pthread_exit((void*) ret_val);
     }
 
@@ -1262,7 +1262,7 @@ void *openCamera(void *data) {
     if (MM_CAMERA_SUCCESS != mCfgControl.mm_camera_set_parm(CAMERA_PARM_CAMERA_ID, &camera_id8)) {
         ALOGE("setting camera id failed");
         LINK_mm_camera_deinit();
-        return false;
+        return NULL;
         //pthread_exit((void*) ret_val);
     }
 
@@ -1271,13 +1271,13 @@ void *openCamera(void *data) {
     if (MM_CAMERA_SUCCESS != mCfgControl.mm_camera_set_parm(CAMERA_PARM_MODE, &mode)) {
         ALOGE("startCamera: CAMERA_PARM_MODE failed:");
         LINK_mm_camera_deinit();
-        return false;
+        return NULL;
         //pthread_exit((void*) ret_val);
     }
 
     if (MM_CAMERA_SUCCESS != LINK_mm_camera_exec()) {
         ALOGE("startCamera: mm_camera_exec failed:");
-        return false;
+        return NULL;
         //pthread_exit((void*) ret_val);
     }
     mCameraOpen = true;
@@ -1290,7 +1290,7 @@ void *openCamera(void *data) {
                 (void *)&snapshotFrame)){
             ALOGE("%s: get 3D format failed", __func__);
             LINK_mm_camera_deinit();
-            return false;
+            return NULL;
             //pthread_exit((void*) ret_val);
         }
         QualcommCameraHardware* obj = QualcommCameraHardware::getInstance();

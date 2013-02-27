@@ -20,6 +20,7 @@
 //#include <utils/KeyedVector.h>
 //#include <utils/String8.h>
 #include <camera/CameraParameters.h>
+#include "unknown.h"
 
 namespace android {
 

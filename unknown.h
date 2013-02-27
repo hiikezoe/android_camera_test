@@ -3,6 +3,11 @@
 
 #include "QCamera_Intf.h"
 
+#define ION_CP_MM_HEAP_ID 8
+#define ION_CAMERA_HEAP_ID 20
+#define ION_IOMMU_HEAP_ID 25
+#define MSM_PMEM_VIDEO_VPE 16
+
 typedef enum {
   CAMSTATS_TYPE,
 } camstats_type;

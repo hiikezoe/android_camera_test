@@ -4253,7 +4253,7 @@ bool QualcommCameraHardware::deinitZslBuffers()
 bool QualcommCameraHardware::createSnapshotMemory (int numberOfRawBuffers, int numberOfJpegBuffers,
                                                    bool initJpegHeap, int snapshotFormat)
 {
-    char * pmem_region;
+    const char * pmem_region;
     int ret;
     int ion_heap = ION_CP_MM_HEAP_ID;
     if(mCurrentTarget == TARGET_MSM8660) {

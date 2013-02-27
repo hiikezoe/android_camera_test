@@ -2924,7 +2924,7 @@ void QualcommCameraHardware::runFrameThread(void *data)
 void QualcommCameraHardware::runPreviewThread(void *data)
 {
     static int hfr_count = 0;
-    msm_frame* frame = NULL;
+    struct msm_frame* frame = NULL;
     status_t retVal = NO_ERROR;
     CAMERA_HAL_UNUSED(data);
     android_native_buffer_t *buffer;

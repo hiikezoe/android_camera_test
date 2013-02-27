@@ -695,8 +695,8 @@ static const str_map scenemode[] = {
 };
 
 static const str_map scenedetect[] = {
-    { QCameraParameters::SCENE_DETECT_OFF, FALSE  },
-    { QCameraParameters::SCENE_DETECT_ON, TRUE },
+    { QCameraParameters::SCENE_DETECT_OFF, false  },
+    { QCameraParameters::SCENE_DETECT_ON, true },
 };
 
 // from camera.h, led_mode_t
@@ -739,8 +739,8 @@ static const str_map focus_modes[] = {
 };
 
 static const str_map lensshade[] = {
-    { QCameraParameters::LENSSHADE_ENABLE, TRUE },
-    { QCameraParameters::LENSSHADE_DISABLE, FALSE }
+    { QCameraParameters::LENSSHADE_ENABLE, true },
+    { QCameraParameters::LENSSHADE_DISABLE, false }
 };
 
 static const str_map hfr[] = {
@@ -751,28 +751,28 @@ static const str_map hfr[] = {
 };
 
 static const str_map mce[] = {
-    { QCameraParameters::MCE_ENABLE, TRUE },
-    { QCameraParameters::MCE_DISABLE, FALSE }
+    { QCameraParameters::MCE_ENABLE, true },
+    { QCameraParameters::MCE_DISABLE, false }
 };
 
 static const str_map hdr[] = {
-    { QCameraParameters::HDR_ENABLE, TRUE },
-    { QCameraParameters::HDR_DISABLE, FALSE }
+    { QCameraParameters::HDR_ENABLE, true },
+    { QCameraParameters::HDR_DISABLE, false }
 };
 
 static const str_map histogram[] = {
-    { QCameraParameters::HISTOGRAM_ENABLE, TRUE },
-    { QCameraParameters::HISTOGRAM_DISABLE, FALSE }
+    { QCameraParameters::HISTOGRAM_ENABLE, true },
+    { QCameraParameters::HISTOGRAM_DISABLE, false }
 };
 
 static const str_map skinToneEnhancement[] = {
-    { QCameraParameters::SKIN_TONE_ENHANCEMENT_ENABLE, TRUE },
-    { QCameraParameters::SKIN_TONE_ENHANCEMENT_DISABLE, FALSE }
+    { QCameraParameters::SKIN_TONE_ENHANCEMENT_ENABLE, true },
+    { QCameraParameters::SKIN_TONE_ENHANCEMENT_DISABLE, false }
 };
 
 static const str_map denoise[] = {
-    { QCameraParameters::DENOISE_OFF, FALSE },
-    { QCameraParameters::DENOISE_ON, TRUE }
+    { QCameraParameters::DENOISE_OFF, false },
+    { QCameraParameters::DENOISE_ON, true }
 };
 
 static const str_map selectable_zone_af[] = {
@@ -783,24 +783,24 @@ static const str_map selectable_zone_af[] = {
 };
 
 static const str_map facedetection[] = {
-    { QCameraParameters::FACE_DETECTION_OFF, FALSE },
-    { QCameraParameters::FACE_DETECTION_ON, TRUE }
+    { QCameraParameters::FACE_DETECTION_OFF, false },
+    { QCameraParameters::FACE_DETECTION_ON, true }
 };
 
 #define DONT_CARE_COORDINATE -1
 static const str_map touchafaec[] = {
-    { QCameraParameters::TOUCH_AF_AEC_OFF, FALSE },
-    { QCameraParameters::TOUCH_AF_AEC_ON, TRUE }
+    { QCameraParameters::TOUCH_AF_AEC_OFF, false },
+    { QCameraParameters::TOUCH_AF_AEC_ON, true }
 };
 
 static const str_map redeye_reduction[] = {
-    { QCameraParameters::REDEYE_REDUCTION_ENABLE, TRUE },
-    { QCameraParameters::REDEYE_REDUCTION_DISABLE, FALSE }
+    { QCameraParameters::REDEYE_REDUCTION_ENABLE, true },
+    { QCameraParameters::REDEYE_REDUCTION_DISABLE, false }
 };
 
 static const str_map zsl_modes[] = {
-    { QCameraParameters::ZSL_OFF, FALSE  },
-    { QCameraParameters::ZSL_ON, TRUE },
+    { QCameraParameters::ZSL_OFF, false  },
+    { QCameraParameters::ZSL_ON, true },
 };
 
 /*
@@ -826,8 +826,8 @@ static const str_map picture_formats[] = {
 };
 
 static const str_map recording_Hints[] = {
-        {"false", FALSE},
-        {"true",  TRUE}
+        {"false", false},
+        {"true",  true}
 };
 
 static const str_map picture_formats_zsl[] = {
@@ -2099,7 +2099,7 @@ void QualcommCameraHardware::initDefaultParameters()
 
     /* Initialize the camframe_timeout_flag*/
     Mutex::Autolock l(&mCamframeTimeoutLock);
-    camframe_timeout_flag = FALSE;
+    camframe_timeout_flag = false;
     mPostviewHeap = NULL;
     mDisplayHeap = NULL;
     mLastPreviewFrameHeap = NULL;
@@ -2240,7 +2240,7 @@ bool QualcommCameraHardware::startCamera()
         fb_fd = open("/dev/graphics/fb0", O_RDWR);
         if (fb_fd < 0) {
             ALOGE("startCamera: fb0 open failed: %s!", strerror(errno));
-            return FALSE;
+            return false;
         }
     }
 #endif
@@ -2544,7 +2544,7 @@ bool QualcommCameraHardware::initZslParameter(void)
         mZslParms.picture_height = mPictureHeight;
         mZslParms.preview_width =  mDimension.display_width;
         mZslParms.preview_height = mDimension.display_height;
-        mZslParms.useExternalBuffers = TRUE;
+        mZslParms.useExternalBuffers = true;
           /* fill main image size, thumbnail size, postview size into capture_params_t*/
         memset(&mZslCaptureParms, 0, sizeof(zsl_capture_params_t));
         mZslCaptureParms.thumbnail_height = mPostviewHeight;
@@ -5464,7 +5464,7 @@ void QualcommCameraHardware::stopPreviewInternal()
                  * But we did not issue native_stop_preview(), so we
                  * need to update mCameraRunning to indicate that
                  * Camera is no longer running. */
-                ALOGE("%s, : MAKE MCAMER_RUNNING FALSE!!!",__FUNCTION__);
+                ALOGE("%s, : MAKE MCAMER_RUNNING false!!!",__FUNCTION__);
                 mCameraRunning = 0;
             }
         }
@@ -5624,7 +5624,7 @@ void QualcommCameraHardware::runAutoFocus()
         //so, no need to perform any AF
         ALOGV("As Cancel auto focus is in progress, auto focus request "
                 "is ignored");
-        status = FALSE;
+        status = false;
     }
     {
         Mutex::Autolock pl(&mParametersLock);
@@ -5804,7 +5804,7 @@ void QualcommCameraHardware::runSnapshotThread(void *data)
             mCamOps.mm_camera_start(current_ops_type,(void *)&mImageCaptureParms,
                  (void *)&mImageEncodeParms);
             }else{
-                notifyShutter(TRUE);
+                notifyShutter(true);
                 initZslParameter();
                 ALOGI("snapshot mZslCapture.thumbnail %d %d %d",mZslCaptureParms.thumbnail_width,
                                      mZslCaptureParms.thumbnail_height,mZslCaptureParms.num_captures);
@@ -5823,7 +5823,7 @@ void QualcommCameraHardware::runSnapshotThread(void *data)
        if(!mZslEnable || mZslFlashEnable)
             deinitRaw();
     }else if(mSnapshotFormat == PICTURE_FORMAT_RAW){
-        notifyShutter(TRUE);
+        notifyShutter(true);
         mCamOps.mm_camera_start(current_ops_type,(void *)&mRawCaptureParms,
                                  NULL);
         // Waiting for callback to come
@@ -6131,7 +6131,7 @@ status_t QualcommCameraHardware::cancelPicture()
     if (mCurrentTarget == TARGET_MSM7627 ||
        (mCurrentTarget == TARGET_MSM7625A ||
         mCurrentTarget == TARGET_MSM7627A)) {
-        mSnapshotDone = TRUE;
+        mSnapshotDone = true;
         mSnapshotThreadWaitLock.lock();
         while (mSnapshotThreadRunning) {
             ALOGV("cancelPicture: waiting for snapshot thread to complete.");
@@ -6141,7 +6141,7 @@ status_t QualcommCameraHardware::cancelPicture()
         mSnapshotThreadWaitLock.unlock();
     }
     rc = native_stop_ops(CAMERA_OPS_CAPTURE, NULL) ? NO_ERROR : UNKNOWN_ERROR;
-    mSnapshotDone = FALSE;
+    mSnapshotDone = false;
     ALOGV("cancelPicture: X: %d", rc);
     return rc;
 }
@@ -6681,9 +6681,9 @@ bool QualcommCameraHardware::native_zoom_image(int fd, int srcOffset, int dstOff
     result = ioctl(fb_fd, MSMFB_BLIT, &zoomImage.list);
     if (result < 0) {
         ALOGE("MSM_FBIOBLT failed! line=%d\n", __LINE__);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 void QualcommCameraHardware::debugShowPreviewFPS() const
@@ -7425,7 +7425,7 @@ static void receive_shutter_callback(common_crop_t *crop)
     QualcommCameraHardware* obj = QualcommCameraHardware::getInstance();
     if (obj != 0) {
         /* Just play shutter sound at this time */
-        obj->notifyShutter(TRUE);
+        obj->notifyShutter(true);
     }
     ALOGV("receive_shutter_callback: X");
 }
@@ -7584,13 +7584,13 @@ void QualcommCameraHardware::receiveRawPicture(status_t status,struct msm_frame 
     /* call notifyShutter to config surface and overlay
      * for postview rendering.
      * Its necessary to issue another notifyShutter here with
-     * mPlayShutterSoundOnly as FALSE, since that is when the
+     * mPlayShutterSoundOnly as false, since that is when the
      * preview buffers are unregistered with the surface flinger.
      * That is necessary otherwise the preview memory wont be
      * deallocated.
      */
     cropp =postviewframe->cropinfo;
-    notifyShutter(FALSE);
+    notifyShutter(false);
 
     if(mSnapshotFormat == PICTURE_FORMAT_JPEG) {
         if(cropp != NULL){
@@ -7750,7 +7750,7 @@ bool QualcommCameraHardware::previewEnabled()
 {
     /* If overlay is used the message CAMERA_MSG_PREVIEW_FRAME would
      * be disabled at CameraService layer. Hence previewEnabled would
-     * return FALSE even though preview is running. Hence check for
+     * return false even though preview is running. Hence check for
      * mOverlay not being NULL to ensure that previewEnabled returns
      * accurate information.
      */
@@ -8756,9 +8756,9 @@ status_t QualcommCameraHardware::setSceneMode(const QCameraParameters& params)
               int retParm1,  retParm2;
               /*if value is auto, set ASD on, else set ASD off*/
               if (value == CAMERA_BESTSHOT_AUTO ) {
-                asd_val = TRUE;
+                asd_val = true;
               } else {
-                asd_val = FALSE;
+                asd_val = false;
               }
 
               /*note: we need to simplify this logic by using a single ctrl as in 8960*/
@@ -9058,10 +9058,10 @@ status_t QualcommCameraHardware::setFocusMode(const QCameraParameters& params)
             }
 
             if(mHasAutoFocusSupport){
-                int cafSupport = FALSE;
+                int cafSupport = false;
                 if(!strcmp(str, QCameraParameters::FOCUS_MODE_CONTINUOUS_VIDEO) ||
                    !strcmp(str, QCameraParameters::FOCUS_MODE_CONTINUOUS_PICTURE)){
-                    cafSupport = TRUE;
+                    cafSupport = true;
                 }
                 ALOGV("Continuous Auto Focus %d", cafSupport);
                 native_set_parms(CAMERA_PARM_CONTINUOUS_AF, sizeof(int8_t), (void *)&cafSupport);
@@ -9595,7 +9595,7 @@ static int8_t receive_event_callback(mm_camera_event* event)
     ALOGV("%s: E", __FUNCTION__);
     if(event == NULL) {
         ALOGE("%s: event is NULL!", __FUNCTION__);
-        return FALSE;
+        return false;
     }
     switch(event->event_type) {
         case SNAPSHOT_DONE:
@@ -9637,7 +9637,7 @@ static int8_t receive_event_callback(mm_camera_event* event)
         default:
             ALOGE("%s: ignore default case", __FUNCTION__);
     }
-    return TRUE;
+    return true;
     ALOGV("%s: X", __FUNCTION__);
 }
 // 720p : video frame calbback from camframe
@@ -9721,7 +9721,7 @@ void QualcommCameraHardware::receive_camframe_error_timeout(void) {
     ALOGI("receive_camframe_error_timeout: E");
     Mutex::Autolock l(&mCamframeTimeoutLock);
     ALOGE(" Camframe timed out. Not receiving any frames from camera driver ");
-    camframe_timeout_flag = TRUE;
+    camframe_timeout_flag = true;
     mNotifyCallback(CAMERA_MSG_ERROR, CAMERA_ERROR_UNKNOWN, 0,
                     mCallbackCookie);
     ALOGI("receive_camframe_error_timeout: X");
@@ -9811,7 +9811,7 @@ bool QualcommCameraHardware::storePreviewFrameForPostview(void) {
 }
 
 bool QualcommCameraHardware::isValidDimension(int width, int height) {
-    bool retVal = FALSE;
+    bool retVal = false;
     /* This function checks if a given resolution is valid or not.
      * A particular resolution is considered valid if it satisfies
      * the following conditions:
@@ -9830,7 +9830,7 @@ bool QualcommCameraHardware::isValidDimension(int width, int height) {
         uint32_t pictureAspectRatio = (uint32_t)((width * Q12)/height);
         for(uint32_t i = 0; i < THUMBNAIL_SIZE_COUNT; i++ ) {
             if(thumbnail_sizes[i].aspect_ratio == pictureAspectRatio) {
-                retVal = TRUE;
+                retVal = true;
                 break;
             }
         }

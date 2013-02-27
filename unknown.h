@@ -194,4 +194,11 @@ typedef struct {
   void (*on_error_event)    (camera_error_type err);
 } mm_camera_notify;
 
+typedef struct {
+  uint32_t timestamp;  /* seconds since 1/6/1980          */
+  double   latitude;   /* degrees, WGS ellipsoid */
+  double   longitude;  /* degrees                */
+  int16_t  altitude;   /* meters                          */
+} camera_position_type;
+
 #endif /* __UNKONWN_H__ */

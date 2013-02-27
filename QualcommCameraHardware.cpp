@@ -293,6 +293,7 @@ static const target_map targetList [] = {
     { "msm7627a", TARGET_MSM7627A },
     { "qsd8250", TARGET_QSD8250 },
     { "msm7630", TARGET_MSM7630 },
+    { "p01d", TARGET_MSM7630 },
     { "msm8660", TARGET_MSM8660 }
 
 };

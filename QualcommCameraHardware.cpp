@@ -3382,7 +3382,7 @@ void QualcommCameraHardware::runHFRThread(void *data)
                         MSM_PMEM_THUMBNAIL,
                         false, false);
                     if (munmap((void *)(mThumbnailMapped[cnt]),handle->size ) == -1) {
-                      ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %d", index);
+                      ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %p", index);
                     }
                     mThumbnailBuffer[cnt] = NULL;
                     mThumbnailMapped[cnt] = NULL;
@@ -3446,7 +3446,7 @@ void QualcommCameraHardware::runVideoThread(void *data)
         // Get the video frame to be encoded
         vframe = cam_frame_get_video ();
         pthread_mutex_unlock(&(g_busy_frame_queue.mut));
-        ALOGI("in video_thread : got video frame %x",vframe);
+        ALOGI("in video_thread : got video frame %p",vframe);
 
         /*if (UNLIKELY(mDebugFps)) {
             debugShowVideoFPS();
@@ -4897,7 +4897,7 @@ status_t QualcommCameraHardware::getBuffersAndStartPreview() {
             }
 			if(retVal == NO_ERROR) {
                 private_handle_t *handle = (private_handle_t *)(*bhandle);//(private_handle_t *)mPreviewBuffer->handle;
-                ALOGI("Handle %p, Fd passed:%d, Base:%p, Size %p",
+                ALOGI("Handle %p, Fd passed:%d, Base:%d, Size %d",
                 handle,handle->fd,handle->base,handle->size);
 
                 if(handle) {
@@ -4911,7 +4911,7 @@ status_t QualcommCameraHardware::getBuffersAndStartPreview() {
                   }else{
                       ALOGI(" Mapped Preview buffer %d", cnt);
                   }
-                  ALOGI("Got the following from get_mem data: %p, handle :%d, release : %p, size: %d",
+                  ALOGI("Got the following from get_mem data: %p, handle :%p, release : %p, size: %d",
                        mPreviewMapped[cnt]->data,
                        mPreviewMapped[cnt]->handle,
                        mPreviewMapped[cnt]->release,
@@ -5550,7 +5550,7 @@ void QualcommCameraHardware::stopPreview()
                         MSM_PMEM_THUMBNAIL,
                         false, false);
                     if (munmap((void *)(mThumbnailMapped[cnt]),handle->size ) == -1) {
-                      ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %d", index);
+                      ALOGE("StopPreview : Error un-mmapping the thumbnail buffer %p", index);
                     }
                     mThumbnailMapped[cnt] = NULL;
                  }
@@ -7750,7 +7750,7 @@ bool QualcommCameraHardware::previewEnabled()
 
 //    return mCameraRunning && mDataCallback &&
 //           ((mMsgEnabled & CAMERA_MSG_PREVIEW_FRAME) || (mOverlay != NULL));
-    ALOGI(" : mCameraRunning : %d mPreviewWindow = %x",mCameraRunning,mPreviewWindow);
+    ALOGI(" : mCameraRunning : %d mPreviewWindow = %p",mCameraRunning,mPreviewWindow);
     return mCameraRunning;// || (mPreviewWindow != NULL);
 }
 status_t QualcommCameraHardware::setRecordSize(const QCameraParameters& params)

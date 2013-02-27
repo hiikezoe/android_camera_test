@@ -2293,12 +2293,14 @@ bool QualcommCameraHardware::startCamera()
     }
     ALOGI("startCamera preview_sizes %p previewSizeCount %d", preview_sizes, PREVIEW_SIZE_COUNT);
 
+#ifdef HAVE_HFR_SIZE
     mCfgControl.mm_camera_query_parms(CAMERA_PARM_HFR_SIZE, (void **)&hfr_sizes, &HFR_SIZE_COUNT);
     if ((hfr_sizes == NULL) || (!HFR_SIZE_COUNT)) {
         ALOGE("startCamera X: could not get hfr sizes");
         return false;
     }
     ALOGI("startCamera hfr_sizes %p hfrSizeCount %d", hfr_sizes, HFR_SIZE_COUNT);
+#endif
 
 
     ALOGV("startCamera X");

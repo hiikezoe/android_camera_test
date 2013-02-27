@@ -8970,26 +8970,7 @@ status_t QualcommCameraHardware::setSnapshotCount(const QCameraParameters& param
 status_t QualcommCameraHardware::updateFocusDistances(const char *focusmode)
 {
     ALOGV("%s: IN", __FUNCTION__);
-    focus_distances_info_t focusDistances;
-    if( mCfgControl.mm_camera_get_parm(CAMERA_PARM_FOCUS_DISTANCES,
-        (void *)&focusDistances) == MM_CAMERA_SUCCESS) {
-        String8 str;
-        char buffer[32];
-        snprintf(buffer, sizeof(buffer), "%f", focusDistances.focus_distance[0]);
-        str.append(buffer);
-        snprintf(buffer, sizeof(buffer), ",%f", focusDistances.focus_distance[1]);
-        str.append(buffer);
-        if(strcmp(focusmode, QCameraParameters::FOCUS_MODE_INFINITY) == 0)
-            snprintf(buffer, sizeof(buffer), ",%s", "Infinity");
-        else
-            snprintf(buffer, sizeof(buffer), ",%f", focusDistances.focus_distance[2]);
-        str.append(buffer);
-        ALOGI("%s: setting KEY_FOCUS_DISTANCES as %s", __FUNCTION__, str.string());
-        mParameters.set(QCameraParameters::KEY_FOCUS_DISTANCES, str.string());
-        return NO_ERROR;
-    }
-    ALOGE("%s: get CAMERA_PARM_FOCUS_DISTANCES failed!!!", __FUNCTION__);
-    return BAD_VALUE;
+    return NO_ERROR;
 }
 
 status_t QualcommCameraHardware::setMeteringAreas(const QCameraParameters& params)

@@ -162,4 +162,10 @@ typedef struct {
                                                void *sub_parm);
 } mm_camera_config;
 
+typedef enum {
+  LIVESHOT_SUCCESS,
+  LIVESHOT_ENCODE_ERROR,
+  LIVESHOT_UNKNOWN_ERROR,
+} liveshot_status;
+
 #endif /* __UNKONWN_H__ */

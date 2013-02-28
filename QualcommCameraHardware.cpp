@@ -2719,7 +2719,7 @@ bool QualcommCameraHardware::native_set_parms(
     if (status == MM_CAMERA_SUCCESS) {
         return true;
     }
-    ALOGE("native_set_parms failed: type %s(%d) length = %d status = %s",
+    ALOGE("native_set_parms failed: type %s(%d) length = %d status = %d",
           type_name, type, length, status);
     return false;
 }

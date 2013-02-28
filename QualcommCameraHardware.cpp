@@ -290,6 +290,8 @@ static liveshotState liveshot_state = LIVESHOT_DONE;
 
 #define Q12 4096
 
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
 static const target_map targetList [] = {
     { "msm7625", TARGET_MSM7625 },
     { "msm7625a", TARGET_MSM7625A },
@@ -302,6 +304,7 @@ static const target_map targetList [] = {
 
 };
 static targetType mCurrentTarget = TARGET_MAX;
+static int targetListLength = ARRAY_SIZE(targetList);
 
 typedef struct {
     uint32_t aspect_ratio;
@@ -1252,7 +1255,7 @@ void QualcommCameraHardware::storeTargetType(void) {
     char mDeviceName[PROPERTY_VALUE_MAX];
     property_get("ro.product.device",mDeviceName," ");
     mCurrentTarget = TARGET_MAX;
-    for( int i = 0; i < TARGET_MAX ; i++) {
+    for( int i = 0; i < targetListLength ; i++) {
        if( !strncmp(mDeviceName, targetList[i].targetStr, 7)) {
          mCurrentTarget = targetList[i].targetEnum;
          if(mCurrentTarget == TARGET_MSM7625) {

@@ -105,10 +105,10 @@ extern "C" {
 #define FOCUS_AREA_INIT "(-1000,-1000,1000,1000,1000)"
 
 #define NATIVE_SET_PARMS(type, length, value)           \
-native_set_parms(#type, (type), (length), (value), 0);
+  native_set_parms(#type, (type), (length), (value), 0);
 
 #define NATIVE_SET_PARMS_WITH_RESULT(type, length, value, result)  \
-native_set_parms(#type, (type), (length), (value), result);
+  native_set_parms(#type, (type), (length), (value), result);
 
 void *libmmcamera;
 void* (*LINK_cam_conf)(void *data);

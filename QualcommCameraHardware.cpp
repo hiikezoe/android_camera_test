@@ -6291,7 +6291,7 @@ status_t QualcommCameraHardware::setHistogramOn()
             if(mStatsMapped[cnt] == NULL) {
                 ALOGE("Failed to get camera memory for stats heap index: %d", cnt);
                 mStatsWaitLock.unlock();
-                return false;
+                return NO_MEMORY;
             }else{
                ALOGV("Received following info for stats mapped data:%p,handle:%p, size:%d,release:%p",
                mStatsMapped[cnt]->data ,mStatsMapped[cnt]->handle, mStatsMapped[cnt]->size, mStatsMapped[cnt]->release);

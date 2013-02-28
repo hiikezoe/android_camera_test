@@ -2699,14 +2699,17 @@ bool QualcommCameraHardware::initImageEncodeParameters(int size)
     return true;
 }
 
+#define MIN(x,y) (((x)<(y))?(x):(y))
 bool QualcommCameraHardware::native_set_parms(
     const char *type_name,
     camera_parm_type_t type,
     uint16_t length, void *value,
     int *result)
 {
-    ALOGV("native_set_parms %s(%d) length = %d value = %d",
-          type_name, type, length, *(int *)value);
+    int show_value = 0;
+    memcpy(&show_value, value, MIN(length, sizeof(show_value)));
+    ALOGI("native_set_parms %s(%d) length = %d value = %d",
+          type_name, type, length, show_value);
 
     mm_camera_status_t status = mCfgControl.mm_camera_set_parm(type, value);
     if (result) {

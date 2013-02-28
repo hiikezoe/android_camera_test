@@ -8133,7 +8133,7 @@ status_t QualcommCameraHardware::setRecordingHint(const QCameraParameters& param
 
 status_t QualcommCameraHardware::setExposureCompensation(
         const QCameraParameters & params){
-    ALOGV("DEBBUG: %s E",__FUNCTION__);
+    ALOGV("DEBUG: %s E",__FUNCTION__);
     if(!mCfgControl.mm_camera_is_supported(CAMERA_PARM_EXPOSURE_COMPENSATION)) {
         ALOGI("Exposure Compensation is not supported for this sensor");
         return NO_ERROR;
@@ -8151,7 +8151,7 @@ status_t QualcommCameraHardware::setExposureCompensation(
                             numerator);
        bool ret = NATIVE_SET_PARMS(CAMERA_PARM_EXPOSURE_COMPENSATION,
                                     sizeof(value), (void *)&value);
-       ALOGI("DEBBUG: %s ret = %d X",__FUNCTION__, ret);
+       ALOGI("DEBUG: %s ret = %d X",__FUNCTION__, ret);
        return ret ? NO_ERROR : UNKNOWN_ERROR;
     }
     ALOGE("Invalid Exposure Compensation");

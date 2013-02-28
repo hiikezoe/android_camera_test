@@ -2813,8 +2813,8 @@ static bool register_buf(int size,
 
     ALOGI("register_buf:  reg = %d buffer = %p",
          !register_buffer, buf);
-    if(native_start_ops(register_buffer ? CAMERA_OPS_REGISTER_BUFFER :
-        CAMERA_OPS_UNREGISTER_BUFFER ,(void *)&pmemBuf) < 0) {
+    if(!native_start_ops(register_buffer ? CAMERA_OPS_REGISTER_BUFFER :
+        CAMERA_OPS_UNREGISTER_BUFFER ,(void *)&pmemBuf)) {
          ALOGE("register_buf: MSM_CAM_IOCTL_(UN)REGISTER_PMEM  error %s",
                strerror(errno));
          return false;

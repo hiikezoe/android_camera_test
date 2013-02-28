@@ -6199,7 +6199,6 @@ status_t QualcommCameraHardware::setParameters(const QCameraParameters& params)
     if ((rc = setJpegThumbnailSize(params))) final_rc = rc;
     if ((rc = setJpegQuality(params)))  final_rc = rc;
     if ((rc = setPictureFormat(params))) final_rc = rc;
-    if ((rc = setRecordSize(params)))  final_rc = rc;
     if ((rc = setPreviewFormat(params)))   final_rc = rc;
     if ((rc = setEffect(params)))       final_rc = rc;
     if ((rc = setGpsLocation(params)))  final_rc = rc;
@@ -6210,16 +6209,13 @@ status_t QualcommCameraHardware::setParameters(const QCameraParameters& params)
     if ((rc = setMCEValue(params)))  final_rc = rc;
     //if ((rc = setHDRImaging(params)))  final_rc = rc;
     if ((rc = setExpBracketing(params)))  final_rc = rc;
-    if ((rc = setPictureFormat(params))) final_rc = rc;
     if ((rc = setSharpness(params)))    final_rc = rc;
     if ((rc = setSaturation(params)))   final_rc = rc;
     if ((rc = setTouchAfAec(params)))   final_rc = rc;
     if ((rc = setSceneMode(params)))    final_rc = rc;
     if ((rc = setContrast(params)))     final_rc = rc;
-    if ((rc = setRecordSize(params)))  final_rc = rc;
     if ((rc = setSceneDetect(params)))  final_rc = rc;
     if ((rc = setStrTextures(params)))   final_rc = rc;
-    if ((rc = setPreviewFormat(params)))   final_rc = rc;
     if ((rc = setSkinToneEnhancement(params)))   final_rc = rc;
     if ((rc = setAntibanding(params)))  final_rc = rc;
     if ((rc = setRedeyeReduction(params)))  final_rc = rc;

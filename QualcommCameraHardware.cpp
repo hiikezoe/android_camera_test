@@ -1312,6 +1312,7 @@ void *openCamera(void *data) {
 
     if (MM_CAMERA_SUCCESS != LINK_mm_camera_exec()) {
         ALOGE("startCamera: mm_camera_exec failed:");
+        LINK_mm_camera_deinit();
         return NULL;
         //pthread_exit((void*) ret_val);
     }

@@ -1256,7 +1256,7 @@ void QualcommCameraHardware::storeTargetType(void) {
     property_get("ro.product.device",mDeviceName," ");
     mCurrentTarget = TARGET_MAX;
     for( int i = 0; i < targetListLength ; i++) {
-       if( !strncmp(mDeviceName, targetList[i].targetStr, 7)) {
+       if( !strcmp(mDeviceName, targetList[i].targetStr)) {
          mCurrentTarget = targetList[i].targetEnum;
          if(mCurrentTarget == TARGET_MSM7625) {
            if(!strncmp(mDeviceName, "msm7625a" , 8))

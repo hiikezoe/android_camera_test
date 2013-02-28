@@ -2802,7 +2802,9 @@ static bool register_buf(int size,
                }
        ALOGI("register_buf: CbOff = 0x%x CrOff = 0x%x",
        pmemBuf.planar1_off, pmemBuf.planar2_off);
-
+#else
+    pmemBuf.y_off    = yoffset;
+    pmemBuf.cbcr_off = cbcr_offset;
 #endif
     pmemBuf.active   = vfe_can_write;
 
@@ -4964,6 +4966,9 @@ status_t QualcommCameraHardware::getBuffersAndStartPreview() {
                     frames[cnt].planar0_off = 0;
                     frames[cnt].planar1_off = myv12_params.CbOffset;
                     frames[cnt].planar2_off = myv12_params.CrOffset;
+#else
+                    frames[cnt].y_off = 0;
+                    frames[cnt].cbcr_off= CbCrOffset;
 #endif
                     frames[cnt].path = OUTPUT_TYPE_P; // MSM_FRAME_ENC;
                     all_chnls = true;
@@ -4972,6 +4977,9 @@ status_t QualcommCameraHardware::getBuffersAndStartPreview() {
                     frames[cnt].planar0_off = 0;
                     frames[cnt].planar1_off= CbCrOffset;
                     frames[cnt].planar2_off = 0;
+#else
+                    frames[cnt].y_off = 0;
+                    frames[cnt].cbcr_off= CbCrOffset;
 #endif
                     frames[cnt].path = OUTPUT_TYPE_P; // MSM_FRAME_ENC;
                   }
@@ -6994,6 +7002,9 @@ bool QualcommCameraHardware::initRecord()
         recordframes[cnt].planar0_off = 0;
         recordframes[cnt].planar1_off = CbCrOffset;
         recordframes[cnt].planar2_off = 0;
+#else
+        recordframes[cnt].y_off = 0;
+        recordframes[cnt].cbcr_off = CbCrOffset;
 #endif
         recordframes[cnt].path = OUTPUT_TYPE_V;
         record_buffers_tracking_flag[cnt] = false;
@@ -7001,6 +7012,10 @@ bool QualcommCameraHardware::initRecord()
         ALOGV ("initRecord :  record heap , video buffers  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
           (unsigned long)recordframes[cnt].buffer, recordframes[cnt].fd, recordframes[cnt].planar0_off,
           recordframes[cnt].planar1_off);
+#else
+        ALOGV ("initRecord :  record heap , video buffers  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
+          (unsigned long)recordframes[cnt].buffer, recordframes[cnt].fd, recordframes[cnt].y_off,
+          recordframes[cnt].cbcr_off);
 #endif
         active=(cnt<ACTIVE_VIDEO_BUFFERS);
         type = MSM_PMEM_VIDEO;

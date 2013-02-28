@@ -7898,8 +7898,8 @@ status_t QualcommCameraHardware::setPreviewSize(const QCameraParameters& params)
         if (width ==  preview_sizes[i].width
            && height ==  preview_sizes[i].height) {
             mParameters.setPreviewSize(width, height);
-            //previewWidth = width;
-            //previewHeight = height;
+            previewWidth = width;
+            previewHeight = height;
             mDimension.display_width = width;
             mDimension.display_height= height;
             return NO_ERROR;

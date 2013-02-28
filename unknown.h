@@ -246,6 +246,7 @@ typedef struct {
 } mm_camera_ops;
 
 typedef struct {
+  char padding[4];
   camera_mode_t cammode;
 } cam_frame_start_parms;
 

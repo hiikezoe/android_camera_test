@@ -4581,7 +4581,7 @@ bool QualcommCameraHardware::initRaw(bool initJpegHeap)
         rotation = 0;
     ret = NATIVE_SET_PARMS(CAMERA_PARM_JPEG_ROTATION, sizeof(int), &rotation);
     if(!ret){
-        ALOGE("setting camera id failed");
+        ALOGE("setting rotation failed");
         return false;
     }
     cam_buf_info_t buf_info;

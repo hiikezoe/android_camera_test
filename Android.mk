@@ -27,9 +27,7 @@ include $(BUILD_EXECUTABLE)
 
 DLOPEN_LIBMMCAMERA:=1
 
-include $(CLEAR_VARS)
-
-LOCAL_CFLAGS :=                               \
+LOCAL_HAL_CFLAGS :=                           \
   -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)  \
   -DNUM_PREVIEW_BUFFERS=4
 
@@ -38,27 +36,51 @@ LOCAL_HAL_FILES :=            \
   QualcommCamera.cpp          \
   QualcommCameraHardware.cpp
 
-LOCAL_SRC_FILES := $(LOCAL_HAL_FILES)
-
-
-LOCAL_C_INCLUDES +=                      \
+LOCAL_HAL_C_INCLUDES +=                  \
   hardware/qcom/display/libgralloc       \
   hardware/qcom/display/libgenlock       \
   hardware/qcom/media/libstagefrighthw   \
   device/panasonic/p01d/include/linux
 
-
-LOCAL_SHARED_LIBRARIES:=  \
-  libbinder               \
-  libdl                   \
-  libcamera_client        \
-  liblog                  \
-  libcutils               \
-  libutils                \
+LOCAL_HAL_SHARED_LIBRARIES :=  \
+  libbinder                    \
+  libdl                        \
+  libcamera_client             \
+  liblog                       \
+  libcutils                    \
+  libutils                     \
   libgenlock
+
+include $(CLEAR_VARS)
+
+LOCAL_CFLAGS := $(LOCAL_HAL_CFLAGS)
+
+LOCAL_SRC_FILES := $(LOCAL_HAL_FILES)
+
+LOCAL_C_INCLUDES := $(LOCAL_HAL_C_INCLUDES)
+
+LOCAL_SHARED_LIBRARIES := $(LOCAL_HAL_SHARED_LIBRARIES)
 
 LOCAL_MODULE:= camera.$(TARGET_BOARD_PLATFORM)
 
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES :=            \
+  $(LOCAL_HAL_FILES)          \
+  oemcamera_test.cpp
+
+LOCAL_CFLAGS := $(LOCAL_HAL_CFLAGS)
+
+LOCAL_C_INCLUDES := $(LOCAL_HAL_C_INCLUDES)
+
+LOCAL_SHARED_LIBRARIES := $(LOCAL_HAL_SHARED_LIBRARIES)
+
+LOCAL_MODULE:= oemcamera_test
+
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)

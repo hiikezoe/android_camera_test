@@ -79,6 +79,7 @@ main(int argc, char **argv)
     sleep(2);
     printf("------------------------- take picture ------------------------------------------\n");
     camera->takePicture();
+    sleep(3);
     printf("------------------------- stop preview ------------------------------------------\n");
     camera->stopPreview();
 

@@ -358,7 +358,6 @@ static void enqueue(struct fifo_queue* q, struct fifo_node*p) {
       q->back = p;
   }
   q->num_of_frames +=1;
-  return;
 }
 
 //supported preview fps ranges should be added to this array in the form (minFps,maxFps)
@@ -1028,7 +1027,6 @@ static void cam_frame_wait_video (void)
         pthread_cond_wait(&(g_busy_frame_queue.wait), &(g_busy_frame_queue.mut));
     }
     ALOGV("cam_frame_wait_video X");
-    return;
 }
 
 void cam_frame_flush_video (void)
@@ -1185,8 +1183,6 @@ static void cam_frame_post_video (struct msm_frame *p)
     pthread_cond_signal(&(g_busy_frame_queue.wait));
 
     ALOGV("cam_frame_post_video... out = %x\n", p->buffer);
-
-    return;
 }
 
 QualcommCameraHardware::FrameQueue::FrameQueue(){
@@ -1270,7 +1266,6 @@ void QualcommCameraHardware::storeTargetType(void) {
        }
     }
     ALOGV(" Storing the current target type as %d ", mCurrentTarget );
-    return;
 }
 
 void *openCamera(void *data) {
